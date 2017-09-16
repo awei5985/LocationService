@@ -1,22 +1,41 @@
 package edu.umd.mindlab.androidservicetest;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 public class LocationService extends Service
 {
     private static final String TAG = "LocationService";
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 3000;
-    private static final float LOCATION_DISTANCE = 10f;
+    private static final int LOCATION_INTERVAL = 30000;
+    private static final float LOCATION_DISTANCE = 0;
+
+    public MainActivity mMa;
+
+    // wifi info persistence variables
+    private WifiManager wifi;
+    private List<ScanResult> mWifiResults;
 
     private class LocationListener implements android.location.LocationListener
     {
@@ -24,45 +43,43 @@ public class LocationService extends Service
 
         public LocationListener(String provider)
         {
-            Log.e(TAG, "LocationListener " + provider);
+            Log.i(TAG, "LocationListener " + provider);
             mLastLocation = new Location(provider);
         }
 
         @Override
         public void onLocationChanged(Location location)
         {
-            Log.e(TAG, "onLocationChanged: " + location);
+            Log.i(TAG, "onLocationChanged: " + location);
             mLastLocation.set(location);
 
             String deviceID =  Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-            Intent i = new Intent();
-            i.putExtra("deviceID", deviceID);
-            i.putExtra("Latitude", mLastLocation.getLatitude());
-            i.putExtra("Longitude", mLastLocation.getLongitude());
-            i.putExtra("Altitude", mLastLocation.getAltitude());
-            i.putExtra("Accuracy", mLastLocation.getAccuracy());
-
-            i.setAction(MainActivity.LOC_ACTION);
-            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(i);
+            if (shouldSend()) {
+                try {
+                    sendLocation(mLastLocation, deviceID);
+                } catch(Exception e) {
+                    Log.e(TAG, e.toString());
+                }
+            }
         }
 
         @Override
         public void onProviderDisabled(String provider)
         {
-            Log.e(TAG, "onProviderDisabled: " + provider);
+            Log.i(TAG, "onProviderDisabled: " + provider);
         }
 
         @Override
         public void onProviderEnabled(String provider)
         {
-            Log.e(TAG, "onProviderEnabled: " + provider);
+            Log.i(TAG, "onProviderEnabled: " + provider);
         }
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras)
         {
-            Log.e(TAG, "onStatusChanged: " + provider);
+            Log.i(TAG, "onStatusChanged: " + provider);
         }
     }
 
@@ -80,7 +97,7 @@ public class LocationService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        Log.e(TAG, "onStartCommand");
+        Log.i(TAG, "onStartCommand");
         super.onStartCommand(intent, flags, startId);
         return START_STICKY;
     }
@@ -88,8 +105,15 @@ public class LocationService extends Service
     @Override
     public void onCreate()
     {
-        Log.e(TAG, "onCreate");
+        Log.i(TAG, "onCreate");
         initializeLocationManager();
+
+        try {
+            setUp();
+        } catch(Exception e) {
+            Log.e(TAG, e.toString());
+        }
+
         try {
             mLocationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
@@ -113,8 +137,16 @@ public class LocationService extends Service
     @Override
     public void onDestroy()
     {
-        Log.e(TAG, "onDestroy");
+        Log.i(TAG, "onDestroy");
         super.onDestroy();
+
+        try {
+            mWifiResults = null;
+            unregisterReceiver(wifiBroadcastReceiver);
+        } catch(Exception e) {
+            Log.e(TAG, e.toString());
+        }
+
         if (mLocationManager != null) {
             for (int i = 0; i < mLocationListeners.length; i++) {
                 try {
@@ -126,10 +158,95 @@ public class LocationService extends Service
         }
     }
 
+    // Broadcast receiver for Wifi. Changes in the Wifi get broadcast to this receiver
+    private BroadcastReceiver wifiBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (action.equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
+                // scan for all results
+                mWifiResults = wifi.getScanResults();
+
+                Log.i(TAG, "Wifi Broadcast Receiver onReceive fired");
+                Log.i(TAG, mWifiResults.toString());
+            }
+        }
+    };
+
+    // start the wifi scan
+    private void setUp() throws Exception{
+        Log.i(TAG, "SetUp");
+
+        registerReceiver(wifiBroadcastReceiver, new IntentFilter(MainActivity.LOC_ACTION));
+
+        if (!isConnected(getApplicationContext())) {
+            Context context = getApplicationContext();
+            CharSequence text = "Yo, we need your WiFi on!";
+            int duration = Toast.LENGTH_LONG;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+
+            throw new Exception("Wifi disabled");
+        } else {
+            wifi.startScan();
+        }
+    }
+
+    // are we connected to the internet at all??
+    private static boolean isConnected(Context context) {
+        Log.i(TAG, "isConnected");
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return (activeNetwork != null);
+    }
+
+
+    public boolean shouldSend() {
+        Log.i(TAG, "ShouldSend");
+        return mWifiResults != null && mWifiResults.size() != 0;
+    }
+
+    public void sendLocation(Location location, String deviceId) throws JSONException {
+        Log.i(TAG, "SendLocation");
+
+        JSONObject obj = new JSONObject();
+        JSONObject ap = new JSONObject();
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+
+        for (ScanResult scan : mWifiResults) {
+            ap.put("ssid", scan.SSID);
+            ap.put("mac", scan.BSSID);
+            ap.put("rssi", scan.level);
+            ap.put("freq", scan.frequency);
+        }
+
+        obj.put("deviceID", deviceId.length() > 0 ? deviceId : "No-device-ID");
+        obj.put("timestamp", timeStamp);
+        obj.put("accessPoints", ap);
+        obj.put("latitude", location.getLatitude());
+        obj.put("longitude", location.getLongitude());
+        obj.put("altitude", location.getAltitude());
+        obj.put("accuracy", location.getAccuracy());
+
+        (new SendData()).execute(obj);
+    }
+
     private void initializeLocationManager() {
-        Log.e(TAG, "initializeLocationManager");
+        Log.i(TAG, "initializeLocationManager");
         if (mLocationManager == null) {
             mLocationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+
+            // register the WIFI broadcast receiver so we can get info from WIFI Service
+            wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            try {
+                setUp();
+                registerReceiver(wifiBroadcastReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+            }
+            catch (Exception e) {
+                Log.i(TAG, "Wifi isn't on");
+            }
         }
     }
 }
