@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
+import android.widget.TextView;
 
 // MainActivity which handles all services and broadcast receivers.
 public class MainActivity extends AppCompatActivity {
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private Switch switchButton;
     private static final String SHARE_LOC_STATUS = "Sharing_Location_Status";
 
+    private boolean hasStarted;
+
     // Called when the activity is first created. This is where you should do all of your normal
     // static set up: create views, bind data to lists, etc. This method also provides you with a
     // Bundle containing the activity's previously frozen state, if there was one.
@@ -56,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
         final Intent serviceIntent = new Intent(this, LocationService.class);
 
+        hasStarted = false;
+
         switchButton = (Switch)findViewById(R.id.enableloc);
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,9 +71,14 @@ public class MainActivity extends AppCompatActivity {
                 startService(serviceIntent);
                 Log.i(TAG, "Switch button clicked on -> start service");
 
+                hasStarted = true;
+
                 SharedPreferences.Editor editor = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE).edit();
                 editor.putBoolean(SHARE_LOC_STATUS, true);
                 editor.commit();
+
+                TextView tv = (TextView) findViewById(R.id.textLocation);
+                tv.setText("Currently sharing your location");
             } else {
 
                 // STOP LOCATION SERVICE
@@ -76,30 +86,22 @@ public class MainActivity extends AppCompatActivity {
                 stopService(serviceIntent);
                 Log.i(TAG, "Switch button clicked on -> stop service");
 
+                hasStarted = false;
+
                 SharedPreferences.Editor editor = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE).edit();
                 editor.putBoolean(SHARE_LOC_STATUS, false);
                 editor.commit();
+
+                TextView tv = (TextView) findViewById(R.id.textLocation);
+                tv.setText("Not sharing your location");
             }
             }
         });
 
         // check permissions
         if (notGranted()) { // permission has not been granted
-            if(requestLocPermissions())
-            {
-                startService(serviceIntent);
-            }
-        } else { //permission has been granted
-            // persist the switchButton between sessions
-            switchButton = (Switch)findViewById(R.id.enableloc);
-            SharedPreferences sharedPrefs = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
-            switchButton.setChecked(sharedPrefs.getBoolean(SHARE_LOC_STATUS, true));
-
-            if(switchButton.isChecked()) {
-                startService(serviceIntent);
-            }
+            requestLocPermissions();
         }
-
     }
 
     public boolean requestLocPermissions() {
@@ -135,8 +137,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume()
     {
         Log.e(TAG, "OnResume");
-        super.onResume();
 
+        // persist the switchButton between sessions
+        switchButton = (Switch)findViewById(R.id.enableloc);
+        SharedPreferences sharedPrefs = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
+        switchButton.setChecked(sharedPrefs.getBoolean(SHARE_LOC_STATUS, true));
+
+        if(switchButton.isChecked() && !hasStarted) {
+            final Intent serviceIntent = new Intent(this, LocationService.class);
+            // restart service
+            stopService(serviceIntent);
+            startService(serviceIntent);
+
+            TextView tv = (TextView) findViewById(R.id.textLocation);
+            tv.setText("Currently sharing your location");
+        }
+
+        super.onResume();
     }
 
     @Override
