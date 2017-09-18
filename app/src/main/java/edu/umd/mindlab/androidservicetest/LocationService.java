@@ -213,7 +213,7 @@ public class LocationService extends Service
 
         JSONObject obj = new JSONObject();
         JSONObject ap = new JSONObject();
-        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss.SSSSSSSSS").format(new Date());
 
         for (ScanResult scan : mWifiResults) {
             ap.put("ssid", scan.SSID);

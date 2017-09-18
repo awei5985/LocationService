@@ -13,7 +13,8 @@ import java.net.URL;
 
 public class SendData extends AsyncTask<JSONObject, Void, String> {
 
-    public final String URI = "https://safe-scrubland-41744.herokuapp.com/";
+    // public final String URI = "https://safe-scrubland-41744.herokuapp.com/";
+    public final String URI = "http://rovermind.cs.umd.edu:8080/LocationServercont2/ContFindLocation";
     public final String TAG = "SendData";
 
     @Override
