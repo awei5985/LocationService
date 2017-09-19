@@ -13,8 +13,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import edu.umd.mindlab.androidservicetest.LoginActivity;
 
 // MainActivity which handles all services and broadcast receivers.
 public class MainActivity extends AppCompatActivity {
@@ -38,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     // switch button persistence variables
     private Switch switchButton;
     private static final String SHARE_LOC_STATUS = "Sharing_Location_Status";
+
+    private Button logOutButton;
 
     private boolean hasStarted;
 
@@ -95,6 +100,15 @@ public class MainActivity extends AppCompatActivity {
                 TextView tv = (TextView) findViewById(R.id.textLocation);
                 tv.setText("Not sharing your location");
             }
+            }
+        });
+
+        logOutButton = (Button) findViewById(R.id.logOutButton);
+        logOutButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent logIntent = new Intent(v.getContext(), LoginActivity.class);
+                logIntent.putExtra("loggedOut", false);
+                startActivity(logIntent);
             }
         });
 
