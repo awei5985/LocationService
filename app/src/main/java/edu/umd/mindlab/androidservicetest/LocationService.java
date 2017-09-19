@@ -213,18 +213,18 @@ public class LocationService extends Service
         Log.i(TAG, "SendLocation");
 
         JSONObject obj = new JSONObject();
-        JSONObject ap = new JSONObject();
         JSONArray ap_array = new JSONArray();
         String timeStamp = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss.SSSSSSSSS").format(new Date());
 
         for (ScanResult scan : mWifiResults) {
+            JSONObject ap = new JSONObject();
             ap.put("ssid", scan.SSID);
             ap.put("mac", scan.BSSID);
             ap.put("rssi", scan.level);
             ap.put("freq", scan.frequency);
+            ap_array.put(ap);
         }
 
-        ap_array.put(ap);
         obj.put("deviceID", deviceId.length() > 0 ? deviceId : "No-device-ID");
         obj.put("timestamp", timeStamp);
         obj.put("accessPoints", ap_array);
