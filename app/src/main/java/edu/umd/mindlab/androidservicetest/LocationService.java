@@ -17,6 +17,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -213,6 +214,7 @@ public class LocationService extends Service
 
         JSONObject obj = new JSONObject();
         JSONObject ap = new JSONObject();
+        JSONArray ap_array = new JSONArray();
         String timeStamp = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss.SSSSSSSSS").format(new Date());
 
         for (ScanResult scan : mWifiResults) {
@@ -222,9 +224,10 @@ public class LocationService extends Service
             ap.put("freq", scan.frequency);
         }
 
+        ap_array.put(ap);
         obj.put("deviceID", deviceId.length() > 0 ? deviceId : "No-device-ID");
         obj.put("timestamp", timeStamp);
-        obj.put("accessPoints", ap);
+        obj.put("accessPoints", ap_array);
         obj.put("latitude", location.getLatitude());
         obj.put("longitude", location.getLongitude());
         obj.put("altitude", location.getAltitude());
