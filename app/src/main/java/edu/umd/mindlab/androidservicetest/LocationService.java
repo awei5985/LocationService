@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class LocationService extends Service
+public class LocationService extends Service implements TaskCompleted
 {
     private static final String TAG = "LocationService";
     private LocationManager mLocationManager = null;
@@ -233,7 +233,7 @@ public class LocationService extends Service
         obj.put("altitude", location.getAltitude());
         obj.put("accuracy", location.getAccuracy());
 
-        (new SendData()).execute(obj);
+        (new SendInfo(LocationService.this)).execute(obj);
     }
 
     private void initializeLocationManager() {
@@ -252,4 +252,6 @@ public class LocationService extends Service
             }
         }
     }
+
+    public void onTaskCompleted(String result){}
 }

@@ -1,5 +1,9 @@
 package edu.umd.mindlab.androidservicetest;
 
+// This task sends the device ID info and LUID to the location server. I should probably merge this with the
+// other task that sends to the location server, but I'll do that later.
+
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -11,11 +15,19 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class SendData extends AsyncTask<JSONObject, Void, String> {
+public class SendInfo extends AsyncTask<JSONObject, Void, String> {
 
     // public final String URI = "https://safe-scrubland-41744.herokuapp.com/";
     public final String URI = "http://rovermind.cs.umd.edu:8080/LocationServercont2/ContFindLocation";
-    public final String TAG = "SendData";
+    public final String TAG = "SendInfo";
+
+    private Context mContext;
+    private TaskCompleted mCallback;
+
+    public SendInfo(Context context) {
+        this.mContext = context;
+        this.mCallback = (TaskCompleted) context;
+    }
 
     @Override
     protected String doInBackground(JSONObject... jObjs) {
@@ -54,10 +66,6 @@ public class SendData extends AsyncTask<JSONObject, Void, String> {
             Log.i(TAG, "Data gotten: " + data);
         } catch (Exception e) {
             e.printStackTrace();
-
-            // Is this going to print the stack trace again?
-            String stackTrace = Log.getStackTraceString(e);
-            Log.e(TAG, stackTrace);
         } finally {
             if (httpURLConnection != null) {
                 httpURLConnection.disconnect();
@@ -72,6 +80,7 @@ public class SendData extends AsyncTask<JSONObject, Void, String> {
     protected void onPostExecute(String result) {
 
         Log.i(TAG, result);
+        mCallback.onTaskCompleted(result);
 
     } // end onPostExecute
 

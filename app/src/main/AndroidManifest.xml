@@ -42,6 +42,14 @@
             android:name=".ConsentActivity"
             android:label="@string/title_activity_consent"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SendDeviceInfo"
+            android:label="@string/title_activity_send_device_info"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".GetPersonalInfo"
+            android:label="@string/title_activity_get_personal_info"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

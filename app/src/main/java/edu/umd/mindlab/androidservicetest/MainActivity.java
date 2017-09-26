@@ -1,6 +1,7 @@
 package edu.umd.mindlab.androidservicetest;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -42,9 +43,15 @@ public class MainActivity extends AppCompatActivity {
     private Switch switchButton;
     private static final String SHARE_LOC_STATUS = "Sharing_Location_Status";
 
-    private Button logOutButton;
+    // Used for making a note that the user has accepted terms if they have made it to this page
+    private static final String ACCEPTED_TERMS = "Terms_Have_Been_Accepted";
 
+    private static final String A_TERMS = "Terms_Accepted";
+
+    private Button logOutButton;
     private boolean hasStarted;
+
+    LoggedIn log = LoggedIn.getLog();
 
     // Called when the activity is first created. This is where you should do all of your normal
     // static set up: create views, bind data to lists, etc. This method also provides you with a
@@ -55,6 +62,15 @@ public class MainActivity extends AppCompatActivity {
         // standard procedures DO NOT DELETE
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // I will put this in the SendDeviceInfo file, which is actually my dummy login page
+        SharedPreferences.Editor editor = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE).edit();
+        editor.putString(A_TERMS, "Terms do not exist");
+        editor.commit();
+
+        log.setLoggedIn(true);
+
+        Log.v(TAG, "Terms pushed in MAIN");
 
         Log.i(TAG, "OnCreate");
 
@@ -107,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         logOutButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent logIntent = new Intent(v.getContext(), LoginActivity.class);
-                logIntent.putExtra("loggedOut", false);
+                log.setLoggedIn(false);
                 startActivity(logIntent);
             }
         });

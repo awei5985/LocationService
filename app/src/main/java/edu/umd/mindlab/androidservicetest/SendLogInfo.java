@@ -1,5 +1,7 @@
 package edu.umd.mindlab.androidservicetest;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -11,14 +13,22 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class SendData extends AsyncTask<JSONObject, Void, String> {
+public class SendLogInfo extends AsyncTask<JSONObject, Void, String> {
 
     // public final String URI = "https://safe-scrubland-41744.herokuapp.com/";
-    public final String URI = "http://rovermind.cs.umd.edu:8080/LocationServercont2/ContFindLocation";
-    public final String TAG = "SendData";
+    public final String URI = "https://obscure-ridge-13374.herokuapp.com/login";
+    public final String TAG = "SendLogInfo";
 
-    @Override
-    protected String doInBackground(JSONObject... jObjs) {
+    private Context mContext;
+    private TaskCompleted mCallback;
+
+    public SendLogInfo(Context context) {
+        this.mContext = context;
+        this.mCallback = (TaskCompleted) context;
+    }
+
+        @Override
+    protected String doInBackground(JSONObject... json) {
 
         String data = "";
         HttpURLConnection httpURLConnection = null;
@@ -31,10 +41,9 @@ public class SendData extends AsyncTask<JSONObject, Void, String> {
             httpURLConnection.setDoOutput(true);
 
             DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
-            if (jObjs != null && jObjs.length > 0) {
-                final JSONObject realjObject = jObjs[0];
-                Log.i(TAG, realjObject.toString());
-                wr.writeBytes(realjObject.toString());
+            if (json != null && json.length > 0) {
+                Log.i(TAG, "ID is " + json[0].toString());
+                wr.writeBytes(json[0].toString());
             }
             wr.flush();
             wr.close();
@@ -51,13 +60,9 @@ public class SendData extends AsyncTask<JSONObject, Void, String> {
             data = response.toString();
             httpURLConnection.disconnect();
 
-            Log.i(TAG, "Data gotten: " + data);
+            Log.i(TAG, "Data gotten from Login Server: " + data);
         } catch (Exception e) {
             e.printStackTrace();
-
-            // Is this going to print the stack trace again?
-            String stackTrace = Log.getStackTraceString(e);
-            Log.e(TAG, stackTrace);
         } finally {
             if (httpURLConnection != null) {
                 httpURLConnection.disconnect();
@@ -72,6 +77,7 @@ public class SendData extends AsyncTask<JSONObject, Void, String> {
     protected void onPostExecute(String result) {
 
         Log.i(TAG, result);
+        mCallback.onTaskCompleted(result);
 
     } // end onPostExecute
 
