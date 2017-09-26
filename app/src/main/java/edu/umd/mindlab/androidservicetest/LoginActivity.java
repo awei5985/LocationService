@@ -36,19 +36,21 @@ public class LoginActivity extends AppCompatActivity {
 
         mainButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent mainIntent = new Intent(v.getContext(), MainActivity.class);
-                startActivity(mainIntent);
+
+                Intent consentIntent = new Intent(v.getContext(), ConsentActivity.class);
+                startActivity(consentIntent);
+
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+   //     FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+    //    fab.setOnClickListener(new View.OnClickListener() {
+    //        @Override
+    //        public void onClick(View view) {
+    //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+    //                    .setAction("Action", null).show();
+    //        }
+    //    });
 
     }
 
