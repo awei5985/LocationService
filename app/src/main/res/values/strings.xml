@@ -8,5 +8,8 @@
     <string name="title_activity_test">testActivity</string>
     <string name="title_activity_send_device_info">SendDeviceInfo</string>
     <string name="title_activity_get_personal_info">GetPersonalInfo</string>
+    <string name="title_activity_send_email">SendEmail</string>
+    <string name="title_activity_snooze">Snooze</string>
+    <string name="title_activity_caslogin">CASLoginActivity</string>
 
 </resources>

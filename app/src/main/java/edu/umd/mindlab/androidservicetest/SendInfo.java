@@ -18,8 +18,10 @@ import java.net.URL;
 public class SendInfo extends AsyncTask<JSONObject, Void, String> {
 
     // public final String URI = "https://safe-scrubland-41744.herokuapp.com/";
-    public final String URI = "http://rovermind.cs.umd.edu:8080/LocationServercont2/ContFindLocation";
-    public final String TAG = "SendInfo";
+    public final String URIloc = "http://rovermind.cs.umd.edu:8080/LocationServercont2/ContFindLocation";
+    public final String URIluid = "http://rovermind.cs.umd.edu:8080/LocationServercont2/Login";
+    public final String URIstatus = "http://rovermind.cs.umd.edu:8080/LocationServercont2/Status";
+    final String TAG = "Send Info";
 
     private Context mContext;
     private TaskCompleted mCallback;
@@ -31,6 +33,17 @@ public class SendInfo extends AsyncTask<JSONObject, Void, String> {
 
     @Override
     protected String doInBackground(JSONObject... jObjs) {
+
+        String URI;
+
+        // checking to see what kind of data we have, to know where to send it
+        if (jObjs[0].length() == 3){
+            URI = URIluid;
+        } else if(jObjs[0].length() == 2){
+            URI = URIstatus;
+        } else{
+            URI = URIloc;
+        }
 
         String data = "";
         HttpURLConnection httpURLConnection = null;

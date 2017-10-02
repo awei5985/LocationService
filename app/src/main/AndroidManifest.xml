@@ -19,9 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".CASLoginActivity"
+            android:label="@string/title_activity_caslogin"
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -47,9 +47,18 @@
             android:label="@string/title_activity_send_device_info"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".SendEmail"
+            android:label="@string/title_activity_send_email"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".GetPersonalInfo"
             android:label="@string/title_activity_get_personal_info"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Snooze"
+            android:label="@string/title_activity_snooze"
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

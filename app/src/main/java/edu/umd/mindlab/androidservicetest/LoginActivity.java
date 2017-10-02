@@ -20,10 +20,6 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLEncoder;
-
 public class LoginActivity extends AppCompatActivity implements TaskCompleted{
 
     private Button loginButton;
@@ -66,6 +62,10 @@ public class LoginActivity extends AppCompatActivity implements TaskCompleted{
                 }
 
                 (new SendLogInfo(LoginActivity.this)).execute(logJSON);
+
+                // testing the countDownTimer
+                Intent emailIntent = new Intent(v.getContext(), SendEmail.class);
+                startActivity(emailIntent);
 
 
             }

@@ -33,14 +33,13 @@ public class ConsentActivity extends AppCompatActivity {
         pdfView= (PDFView)findViewById(R.id.pdfView);
         displayFromAsset(SAMPLE_FILE);
 
-
         agreeButton = (Button) findViewById(R.id.agreeBtn);
 
         agreeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if ((pdfView.getCurrentPage()) == (pdfView.getPageCount()-1)) {
-                    Intent mainIntent = new Intent(v.getContext(), MainActivity.class);
-                    startActivity(mainIntent);
+                    Intent emailIntent = new Intent(v.getContext(), SendEmail.class);
+                    startActivity(emailIntent);
                 } else {
                     Toast.makeText(getApplicationContext(), "Please scroll down to read the entire consent form",
                             Toast.LENGTH_SHORT).show();
@@ -52,7 +51,7 @@ public class ConsentActivity extends AppCompatActivity {
         disAgreeButton = (Button) findViewById(R.id.disagreeBtn);
         disAgreeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent logIntent = new Intent(v.getContext(), LoginActivity.class);
+                Intent logIntent = new Intent(v.getContext(), CASLoginActivity.class);
                 logIntent.putExtra("ConsentFailed", false);
                 startActivity(logIntent);
             }

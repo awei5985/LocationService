@@ -15,16 +15,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import edu.umd.mindlab.androidservicetest.LoginActivity;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 // MainActivity which handles all services and broadcast receivers.
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TaskCompleted {
 
     // GLOBAL VARIABLES
     public static final String LOC_ACTION = "LOCATION";
+    private static final String TERMS_ACCEPT = "Are_Terms_Accepted";
 
     // LOCAL VARIABLES
 
@@ -42,16 +45,16 @@ public class MainActivity extends AppCompatActivity {
     // switch button persistence variables
     private Switch switchButton;
     private static final String SHARE_LOC_STATUS = "Sharing_Location_Status";
+    private static final String LUID_STORE = "The_LUID_is_stored";
 
     // Used for making a note that the user has accepted terms if they have made it to this page
-    private static final String ACCEPTED_TERMS = "Terms_Have_Been_Accepted";
-
-    private static final String A_TERMS = "Terms_Accepted";
 
     private Button logOutButton;
+    private Button snoozeButton;
+    private Button changeLogButton;
+    private EditText minutes;
+    private EditText seconds;
     private boolean hasStarted;
-
-    LoggedIn log = LoggedIn.getLog();
 
     // Called when the activity is first created. This is where you should do all of your normal
     // static set up: create views, bind data to lists, etc. This method also provides you with a
@@ -63,14 +66,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // I will put this in the SendDeviceInfo file, which is actually my dummy login page
-        SharedPreferences.Editor editor = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE).edit();
-        editor.putString(A_TERMS, "Terms do not exist");
-        editor.commit();
-
+        LoggedIn log = LoggedIn.getLog();
         log.setLoggedIn(true);
-
-        Log.v(TAG, "Terms pushed in MAIN");
 
         Log.i(TAG, "OnCreate");
 
@@ -92,6 +89,19 @@ public class MainActivity extends AppCompatActivity {
                 startService(serviceIntent);
                 Log.i(TAG, "Switch button clicked on -> start service");
 
+                SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
+                String LUID = sharedPref.getString(LUID_STORE, "LUID not found");
+
+                JSONObject locStatusJ = new JSONObject();
+                try{
+                    locStatusJ.put("LUID",LUID);
+                    locStatusJ.put("collecting","on");
+                }catch(JSONException e){
+                    Log.e(TAG, "JSON problem");
+                }
+
+                (new SendInfo(MainActivity.this)).execute(locStatusJ);
+
                 hasStarted = true;
 
                 SharedPreferences.Editor editor = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE).edit();
@@ -106,6 +116,19 @@ public class MainActivity extends AppCompatActivity {
                 // Note: Location service does not terminate unless this toggle is turned off.
                 stopService(serviceIntent);
                 Log.i(TAG, "Switch button clicked on -> stop service");
+
+                SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
+                String LUID = sharedPref.getString(LUID_STORE, "LUID not found");
+
+                JSONObject locStatusJ = new JSONObject();
+                try{
+                    locStatusJ.put("LUID",LUID);
+                    locStatusJ.put("collecting","off");
+                }catch(JSONException e){
+                    Log.e(TAG, "JSON problem");
+                }
+
+                (new SendInfo(MainActivity.this)).execute(locStatusJ);
 
                 hasStarted = false;
 
@@ -122,9 +145,29 @@ public class MainActivity extends AppCompatActivity {
         logOutButton = (Button) findViewById(R.id.logOutButton);
         logOutButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent logIntent = new Intent(v.getContext(), LoginActivity.class);
+
+                stopService(serviceIntent);
+                Log.i(TAG, "Logged out -> stop service");
+
+                SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
+                String LUID = sharedPref.getString(LUID_STORE, "LUID not found");
+
+                JSONObject logOutJ = new JSONObject();
+                try{
+                    logOutJ.put("LUID",LUID);
+                    logOutJ.put("collecting","off");
+                }catch(JSONException e){
+                    Log.e(TAG, "JSON problem");
+                }
+
+                (new SendInfo(MainActivity.this)).execute(logOutJ);
+
+                LoggedIn log = LoggedIn.getLog();
                 log.setLoggedIn(false);
+
+                Intent logIntent = new Intent(v.getContext(), CASLoginActivity.class);
                 startActivity(logIntent);
+
             }
         });
 
@@ -132,6 +175,48 @@ public class MainActivity extends AppCompatActivity {
         if (notGranted()) { // permission has not been granted
             requestLocPermissions();
         }
+
+        minutes = (EditText) findViewById(R.id.minuteEdit);
+        seconds = (EditText) findViewById(R.id.secondsEdit);
+        snoozeButton = (Button) findViewById(R.id.snoozeButton);
+        changeLogButton = (Button) findViewById(R.id.testButton);
+
+        snoozeButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                stopService(serviceIntent);
+                Log.i(TAG, "Snoozed -> stop service");
+                String stMins = minutes.getText().toString();
+                String stSecs = seconds.getText().toString();
+
+                int mins = 1;
+                int secs = 0;
+                try{
+                    mins = Integer.parseInt(minutes.getText().toString());
+                    secs = Integer.parseInt(seconds.getText().toString());
+                } catch(NumberFormatException e){
+                }
+
+                Intent snoozeIntent = new Intent(v.getContext(), Snooze.class);
+                snoozeIntent.putExtra("hours", mins);
+                snoozeIntent.putExtra("mins", secs);
+                startActivity(snoozeIntent);
+
+            }
+        });
+
+        // changeLogButton is a terrible name, this is for changing the Terms Accepted status (for testing purposes)
+        changeLogButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                SharedPreferences.Editor editor = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE).edit();
+                editor.putBoolean(TERMS_ACCEPT, false);
+                editor.commit();
+
+                Log.v(TAG, "Consented should be false.");
+
+            }
+        });
     }
 
     public boolean requestLocPermissions() {
@@ -173,11 +258,26 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPrefs = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
         switchButton.setChecked(sharedPrefs.getBoolean(SHARE_LOC_STATUS, true));
 
+
+
         if(switchButton.isChecked() && !hasStarted) {
             final Intent serviceIntent = new Intent(this, LocationService.class);
             // restart service
             stopService(serviceIntent);
             startService(serviceIntent);
+
+            SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
+            String LUID = sharedPref.getString(LUID_STORE, "LUID not found");
+
+            JSONObject logOutJ = new JSONObject();
+            try{
+                logOutJ.put("LUID",LUID);
+                logOutJ.put("collecting","on");
+            }catch(JSONException e){
+                Log.e(TAG, "JSON problem");
+            }
+
+            (new SendInfo(MainActivity.this)).execute(logOutJ);
 
             TextView tv = (TextView) findViewById(R.id.textLocation);
             tv.setText("Currently sharing your location");
@@ -230,5 +330,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onTaskCompleted(String result) {
+
+        // after the user has logged out, but this could just be done in the logout button onClicked
+
+        // will I be able to check this elsewhere? If I can't then what's the point?
+        // I think so, because every time .getLog() is called it returns the same instance
+
     }
 }

@@ -9,7 +9,9 @@ public class LoggedIn {
     private static LoggedIn logged = new LoggedIn();
     private boolean isLoggedIn;
 
-    private LoggedIn(){}
+    private LoggedIn(){
+        isLoggedIn = false;
+    }
 
     public static LoggedIn getLog(){
 

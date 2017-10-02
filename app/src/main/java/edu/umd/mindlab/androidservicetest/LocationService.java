@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -31,12 +32,16 @@ public class LocationService extends Service implements TaskCompleted
     private LocationManager mLocationManager = null;
     private static final int LOCATION_INTERVAL = 30000;
     private static final float LOCATION_DISTANCE = 0;
+    private final String LUID_STORE = "The_LUID_is_stored";
 
     public MainActivity mMa;
 
     // wifi info persistence variables
     private WifiManager wifi;
     private List<ScanResult> mWifiResults;
+
+    // will have to send  the LUID with the location data
+    private String LUID;
 
     private class LocationListener implements android.location.LocationListener
     {
@@ -224,6 +229,10 @@ public class LocationService extends Service implements TaskCompleted
             ap.put("freq", scan.frequency);
             ap_array.put(ap);
         }
+
+        SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
+        String LUID = sharedPref.getString(LUID_STORE, "doesn't exist");
+        obj.put("LUID", LUID);
 
         obj.put("deviceID", deviceId.length() > 0 ? deviceId : "No-device-ID");
         obj.put("timestamp", timeStamp);

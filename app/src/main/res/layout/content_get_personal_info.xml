@@ -102,9 +102,9 @@
         tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toBottomOf="@+id/lastNameEdit"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="49dp"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="44dp"
+        android:layout_marginBottom="45dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="24dp"
@@ -115,10 +115,14 @@
         android:layout_width="243dp"
         android:layout_height="24dp"
         android:text="Date of Birth (mm/dd/yyy)"
+        tools:layout_constraintTop_creator="1"
         tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toTopOf="@+id/dobEdit"
+        app:layout_constraintBottom_toBottomOf="@+id/textView5"
+        android:layout_marginTop="163dp"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/dobEdit" />
+        android:layout_marginBottom="163dp"
+        app:layout_constraintLeft_toLeftOf="@+id/firstNameEdit"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView4"

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -28,12 +29,6 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
     private EditText birthCity;
     private EditText uid;
     private Button infoSubmit;
-
-    private String first_name;
-    private String last_name;
-    private String birth_date;
-    private String birth_city;
-    private String UID;
 
     private String luid;
 
@@ -60,11 +55,11 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
         infoSubmit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                first_name = fname.getText().toString();
-                last_name = lname.getText().toString();
-                birth_date = dob.getText().toString();
-                birth_city = birthCity.getText().toString();
-                UID = uid.getText().toString();
+                String first_name = fname.getText().toString();
+                String last_name = lname.getText().toString();
+                String birth_date = dob.getText().toString();
+                String birth_city = birthCity.getText().toString();
+                String UID = uid.getText().toString();
 
                 // this method will use the hash function and return the LUID
                 luid = getLUID(first_name, last_name, birth_date, birth_city, UID);
@@ -93,7 +88,7 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
     // This is the method where the info is hashed and the LUID is retured.
     public String getLUID(String first, String last, String dob, String birthD, String birthC){
 
-        return "ThisIsAFakeLUID";
+        return "android_test1";
 
     }
 
@@ -109,10 +104,14 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
 
         String serviceName = Context.TELEPHONY_SERVICE;
         TelephonyManager m_telephonyManager = (TelephonyManager) getSystemService(serviceName);
-        String IMEI = m_telephonyManager.getDeviceId();
+        //String IMEI = m_telephonyManager.getDeviceId();
+        String deviceID =  Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         int simState = m_telephonyManager.getSimState();
-        String serviceProvider = m_telephonyManager.getSimOperatorName();
-        int API_Level = Build.VERSION.SDK_INT;
+        //String serviceProvider = m_telephonyManager.getSimOperatorName();
+        String serviceProvider = m_telephonyManager.getNetworkOperatorName();
+        Integer API_Level = Build.VERSION.SDK_INT;
+        // not sure if it's necessary to cast this to a string, but I'll do it for now.
+        String apiLevel = API_Level.toString();
         String device = android.os.Build.DEVICE;
         String model = android.os.Build.MODEL;
         String product = android.os.Build.PRODUCT;
@@ -120,8 +119,8 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
         JSONObject infoJSON = new JSONObject();
         try {
             infoJSON.put("LUID", luid);
-            infoJSON.put("deviceID", IMEI.toString());
-            infoJSON.put("deviceInfo", "Make: " + device + ", Model: " + model + ", Network Provider: " + serviceProvider + ", API: " + IMEI.toString());
+            infoJSON.put("deviceID", deviceID);
+            infoJSON.put("deviceInfo", "Make: " + device + ", Model: " + model + ", Network Provider: " + serviceProvider + ", API: " + apiLevel);
         } catch (JSONException e) {
             Log.e(TAG, "JSON problem");
         }
@@ -132,23 +131,23 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
     @Override
     public void onTaskCompleted(String result) {
 
-        Intent consentIntent = new Intent(this, ConsentActivity.class);
-        startActivity(consentIntent);
+        Log.v(TAG, "The result was" + result + "iuuii");
 
-       /* if (result == "good"){
+        if (result.equals("valid LUID")){
+            Log.v(TAG, "it says .equals() is TRUE");
+        }else{
+            Log.v(TAG, "and it says .equals() is FALSE");
+        }
+
+       if (result.equals("valid LUID")){
 
             storeLUID(luid);
+            luid = "";
 
-            // actually I think if I just ceate these variables in this method, they should not exist later
-            first_name = "";
-            last_name = "";
-            birth_date = "";
-            birth_city = "";
-            UID = "";
+            Intent consentIntent = new Intent(this, ConsentActivity.class);
+            startActivity(consentIntent);
 
-
-
-        } else{
+        } else if (result.equals("invalid")){
 
             if (verifyAttempts > 0) {
 
@@ -157,10 +156,17 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
             }  else{
 
                 Toast.makeText(this, "Verification failed. Please check info and try again.", Toast.LENGTH_SHORT).show();
-
+                verifyAttempts++;
             }
 
-        } */
+        } else{
+           // This is just for testing now and I will remove it later.
+
+           Log.v(TAG, "The result was null, probably. Something is wrong.");
+           Intent consentIntent = new Intent(this, ConsentActivity.class);
+           startActivity(consentIntent);
+
+       }
 
     }
 
