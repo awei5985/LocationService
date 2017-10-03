@@ -24,6 +24,7 @@ public class SendEmail extends AppCompatActivity {
 
     private EditText email;
     private Button sendEmail;
+    private Button continueButton;
     private static final String TERMS_ACCEPT = "Are_Terms_Accepted";
     private final String TAG = "SendEmailActivity";
 
@@ -43,6 +44,10 @@ public class SendEmail extends AppCompatActivity {
 
         email = (EditText) findViewById(R.id.emailEdit);
         sendEmail = (Button) findViewById(R.id.sendConfirmation);
+        continueButton = (Button) findViewById(R.id.emailContinueButton);
+
+        Intent i = getIntent();
+        final String name = i.getStringExtra("name");
 
         sendEmail.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -70,7 +75,7 @@ public class SendEmail extends AppCompatActivity {
                         try {
                             EmailSender sender = new EmailSender("PrometheusLoc@gmail.com",
                                     "prometheus");
-                            sender.sendMailAttach("Prometheus Terms and Conditions PDF", "Do not reply to this email",
+                            sender.sendMailAttach("Prometheus Terms and Conditions PDF - " + name, "Do not reply to this email",
                                     "PrometheusLoc@gmail.com", email.getText().toString(), file);
                         } catch (Exception e) {
                             Log.e("SendMail", "Sending didn't work?");
@@ -81,8 +86,15 @@ public class SendEmail extends AppCompatActivity {
 
                 Toast.makeText(v.getContext(), "Email Sent", Toast.LENGTH_SHORT).show();
 
-                //Intent mainIntent = new Intent(v.getContext(), MainActivity.class);
-               // startActivity(mainIntent);
+            }
+
+        });
+
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Intent mainIntent = new Intent(v.getContext(), MainActivity.class);
+                startActivity(mainIntent);
 
             }
 

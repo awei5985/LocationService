@@ -35,10 +35,15 @@ public class ConsentActivity extends AppCompatActivity {
 
         agreeButton = (Button) findViewById(R.id.agreeBtn);
 
+        Intent i = getIntent();
+        final String fullName = i.getStringExtra("name");
+
+
         agreeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if ((pdfView.getCurrentPage()) == (pdfView.getPageCount()-1)) {
                     Intent emailIntent = new Intent(v.getContext(), SendEmail.class);
+                    emailIntent.putExtra("name", fullName);
                     startActivity(emailIntent);
                 } else {
                     Toast.makeText(getApplicationContext(), "Please scroll down to read the entire consent form",

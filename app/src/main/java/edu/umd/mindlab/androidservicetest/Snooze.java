@@ -98,6 +98,7 @@ public class Snooze extends AppCompatActivity implements TaskCompleted {
             String minsStr;
             String secsStr;
 
+            // from millisUntilFinished figure out how many hours, minutes and seconds to show
             long secsLeft = millisUntilFinished/1000;
             long hours = secsLeft/3600;
             long minsLeft = (secsLeft % 3600)/60;
@@ -115,7 +116,7 @@ public class Snooze extends AppCompatActivity implements TaskCompleted {
                 secsStr = "" + secsLeft;
             }
 
-            countD.setText(hours + " : " + minsLeft + " : " + secsLeft);
+            countD.setText(hours + " : " + minsStr + " : " + secsStr);
         }
 
         public void setCounterText(TextView c){

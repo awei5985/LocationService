@@ -31,6 +31,8 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
     private Button infoSubmit;
 
     private String luid;
+    private String first_name;
+    private String last_name;
 
     private int verifyAttempts = 0;
 
@@ -55,8 +57,8 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
         infoSubmit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                String first_name = fname.getText().toString();
-                String last_name = lname.getText().toString();
+                first_name = fname.getText().toString();
+                last_name = lname.getText().toString();
                 String birth_date = dob.getText().toString();
                 String birth_city = birthCity.getText().toString();
                 String UID = uid.getText().toString();
@@ -131,27 +133,32 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
     @Override
     public void onTaskCompleted(String result) {
 
-        Log.v(TAG, "The result was" + result + "iuuii");
+        Log.v(TAG, "result here was" + result + "|||");
 
-        if (result.equals("valid LUID")){
-            Log.v(TAG, "it says .equals() is TRUE");
-        }else{
-            Log.v(TAG, "and it says .equals() is FALSE");
-        }
+        if (result == null){
 
-        String test = result;
+            Log.v(TAG, "The result was null, probably. Something is wrong.");
 
-       if (result.equals(test)){
+        } else if(result.contains("LUID")){
+            // if the LUID was valid go to the consent activity
+
+            Log.v(TAG, "The result correct.");
 
             storeLUID(luid);
             luid = "";
+            String fullName = first_name + " " + last_name;
 
             Intent consentIntent = new Intent(this, ConsentActivity.class);
+            consentIntent.putExtra("name", fullName);
+            first_name = "";
+            last_name = "";
             startActivity(consentIntent);
 
-        } else if (result.equals("invalid")){
+        } else{
+            // if the result was not valid, ask them to try again
 
             if (verifyAttempts > 0) {
+                // if after trying again, it still doesn't work. Ask them to see a project manager.
 
                 Toast.makeText(this, "Please see project director for assistance", Toast.LENGTH_LONG).show();
 
@@ -161,14 +168,7 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
                 verifyAttempts++;
             }
 
-        } else{
-           // This is just for testing now and I will remove it later.
-
-           Log.v(TAG, "The result was null, probably. Something is wrong.");
-           Intent consentIntent = new Intent(this, ConsentActivity.class);
-           startActivity(consentIntent);
-
-       }
+        }
 
     }
 
