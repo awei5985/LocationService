@@ -14,7 +14,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 
 public class SendEmail extends AppCompatActivity {
@@ -44,30 +47,46 @@ public class SendEmail extends AppCompatActivity {
         sendEmail.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                Intent mainIntent = new Intent(SendEmail.this, MainActivity.class);
-                startActivity(mainIntent);
-
-                //file:///C:/Users/User/LocationService/app/src/main/assets/Consent_Smartphone_App.pdf
-                // for now I just want to make sure the flow is good. I will work on sending the email later
-               //Uri uri=Uri.parse("file:///LocationService/app/src/main/assets/Consent_Smartphone_App.pdf");
-
-                /*File termsFile = new File("android.resource://edu.umd.mindlab.androidservicetest/assets/Consent_Smartphone_App.pdf");
-                Uri uri = Uri.fromFile(termsFile);
-                Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("message/rfc822");
-                i.putExtra(Intent.EXTRA_EMAIL, new String[]{"mharding15@gmail.com"});
-                i.putExtra(Intent.EXTRA_SUBJECT, "Send Email Test 1");
-                i.putExtra(Intent.EXTRA_TEXT   , "this is a test of sending an email in android. Did it work?");
-                i.setType("application/pdf");
-                i.putExtra(Intent.EXTRA_STREAM, uri);
+                InputStream inputStream = null;
+                ByteArrayOutputStream output = null;
                 try {
-                    startActivity(Intent.createChooser(i, "Send mail..."));
-                } catch (android.content.ActivityNotFoundException ex) {
-                    Toast.makeText(v.getContext(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
-                } */
-            }
-        });
+                    inputStream = getAssets().open("Consent_Smartphone_App.pdf");
+                    byte[] buffer = new byte[8192];
+                    int bytesRead;
+                    output = new ByteArrayOutputStream();
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        output.write(buffer, 0, bytesRead);
+                    }
+                } catch(IOException e){
+                    Log.e(TAG, "Problem getting pdf");
+                }
 
+                final byte[] file = output.toByteArray();
+
+                new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            EmailSender sender = new EmailSender("PrometheusLoc@gmail.com",
+                                    "prometheus");
+                            sender.sendMailAttach("Prometheus Terms and Conditions PDF", "Do not reply to this email",
+                                    "PrometheusLoc@gmail.com", email.getText().toString(), file);
+                        } catch (Exception e) {
+                            Log.e("SendMail", "Sending didn't work?");
+                        }
+                    }
+
+                }).start();
+
+                Toast.makeText(v.getContext(), "Email Sent", Toast.LENGTH_SHORT).show();
+
+                //Intent mainIntent = new Intent(v.getContext(), MainActivity.class);
+               // startActivity(mainIntent);
+
+            }
+
+        });
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

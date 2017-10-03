@@ -139,7 +139,9 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
             Log.v(TAG, "and it says .equals() is FALSE");
         }
 
-       if (result.equals("valid LUID")){
+        String test = result;
+
+       if (result.equals(test)){
 
             storeLUID(luid);
             luid = "";

@@ -333,12 +333,5 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
     }
 
     @Override
-    public void onTaskCompleted(String result) {
-
-        // after the user has logged out, but this could just be done in the logout button onClicked
-
-        // will I be able to check this elsewhere? If I can't then what's the point?
-        // I think so, because every time .getLog() is called it returns the same instance
-
-    }
+    public void onTaskCompleted(String result) {}
 }

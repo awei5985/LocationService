@@ -77,8 +77,9 @@ public class SendInfo extends AsyncTask<JSONObject, Void, String> {
             httpURLConnection.disconnect();
 
             Log.i(TAG, "Data gotten: " + data);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            Log.e(TAG, Log.getStackTraceString(ex));
+            ex.printStackTrace();
         } finally {
             if (httpURLConnection != null) {
                 httpURLConnection.disconnect();

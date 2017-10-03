@@ -1,6 +1,7 @@
 package edu.umd.mindlab.androidservicetest;
 
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.webkit.CookieManager;
+import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -66,6 +68,20 @@ public class CASLoginActivity extends AppCompatActivity {
                 String cookies = CookieManager.getInstance().getCookie(url);
                 if (url.contains("demo") && cookies.contains("shib_idp_session")) {
                     destroyWebView();
+
+                    ///
+                    CookieManager cookieManager = CookieManager.getInstance();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        cookieManager.removeAllCookies(new ValueCallback<Boolean>() {
+                            // a callback which is executed when the cookies have been removed
+                            @Override
+                            public void onReceiveValue(Boolean aBoolean) {
+                                Log.d(TAG, "Cookie removed: " + aBoolean);
+                            }
+                        });
+                    }
+                    else cookieManager.removeAllCookie();
+                    ///
 
                     SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
                     boolean termsAccepted =  sharedPref.getBoolean(TERMS_ACCEPT, false);
