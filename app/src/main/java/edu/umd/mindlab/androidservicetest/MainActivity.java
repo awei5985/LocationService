@@ -1,7 +1,6 @@
 package edu.umd.mindlab.androidservicetest;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -51,9 +50,9 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
 
     private Button logOutButton;
     private Button snoozeButton;
-    private Button changeLogButton;
+    //private Button changeLogButton;
+    private EditText hours;
     private EditText minutes;
-    private EditText seconds;
     private boolean hasStarted;
 
     // Called when the activity is first created. This is where you should do all of your normal
@@ -77,12 +76,42 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
 
         final Intent serviceIntent = new Intent(this, LocationService.class);
 
+        /* new stuff I put in to enable sharing by default
+        switchButton = (Switch)findViewById(R.id.enableloc);
+        SharedPreferences sharedPrefs = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
+        switchButton.setChecked(sharedPrefs.getBoolean(SHARE_LOC_STATUS, true));
+
+        SharedPreferences.Editor editor = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE).edit();
+        editor.putBoolean(SHARE_LOC_STATUS, true);
+        editor.commit();
+
+        switchButton.setChecked(true);
+        startService(serviceIntent);
+        Log.i(TAG, "Main Activity started: Service -> ON");
+
+        SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
+        String LUID = sharedPref.getString(LUID_STORE, "LUID not found");
+
+        JSONObject locStatusJ = new JSONObject();
+        try{
+            locStatusJ.put("LUID",LUID);
+            locStatusJ.put("collecting","on");
+        }catch(JSONException e){
+            Log.e(TAG, "JSON problem");
+        }
+
+        (new SendInfo(MainActivity.this)).execute(locStatusJ);
+        */
+
         hasStarted = false;
 
         switchButton = (Switch)findViewById(R.id.enableloc);
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Log.v(TAG, "The Button has been clicked!!!!!!!!");
+
             if(switchButton.isChecked()) {
 
                 // START LOCATION SERVICE
@@ -176,36 +205,42 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
             requestLocPermissions();
         }
 
-        minutes = (EditText) findViewById(R.id.minuteEdit);
-        seconds = (EditText) findViewById(R.id.secondsEdit);
+        hours = (EditText) findViewById(R.id.hourEdit);
+        minutes = (EditText) findViewById(R.id.minutesEdit);
         snoozeButton = (Button) findViewById(R.id.snoozeButton);
-        changeLogButton = (Button) findViewById(R.id.testButton);
+        //changeLogButton = (Button) findViewById(R.id.testButton);
 
         snoozeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                int hrs;
+                // if the number was blank, use default hours
+                try{
+                    hrs = Integer.parseInt(hours.getText().toString());
+                } catch(NumberFormatException e){
+                    hrs = -1;
+                }
+
+                int mns;
+                // if the number was blank, use default mins
+                try{
+                    mns = Integer.parseInt(minutes.getText().toString());
+                } catch(NumberFormatException e){
+                    mns = -1;
+                }
 
                 stopService(serviceIntent);
                 Log.i(TAG, "Snoozed -> stop service");
-                String stMins = minutes.getText().toString();
-                String stSecs = seconds.getText().toString();
 
-                int mins = 1;
-                int secs = 0;
-                try{
-                    mins = Integer.parseInt(minutes.getText().toString());
-                    secs = Integer.parseInt(seconds.getText().toString());
-                } catch(NumberFormatException e){
-                }
-
+                // call the snooze activity and pass the time to snooze
                 Intent snoozeIntent = new Intent(v.getContext(), Snooze.class);
-                snoozeIntent.putExtra("hours", mins);
-                snoozeIntent.putExtra("mins", secs);
+                snoozeIntent.putExtra("hours", hrs);
+                snoozeIntent.putExtra("mins", mns);
                 startActivity(snoozeIntent);
 
             }
         });
 
-        // changeLogButton is a terrible name, this is for changing the Terms Accepted status (for testing purposes)
+        /* changeLogButton is a terrible name, this is for changing the Terms Accepted status (for testing purposes)
         changeLogButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -213,10 +248,10 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
                 editor.putBoolean(TERMS_ACCEPT, false);
                 editor.commit();
 
-                Log.v(TAG, "Consented should be false.");
+                Log.v(TAG, "It will now act as no consent has been done on login.");
 
             }
-        });
+        }); */
     }
 
     public boolean requestLocPermissions() {
@@ -257,7 +292,6 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
         switchButton = (Switch)findViewById(R.id.enableloc);
         SharedPreferences sharedPrefs = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
         switchButton.setChecked(sharedPrefs.getBoolean(SHARE_LOC_STATUS, true));
-
 
 
         if(switchButton.isChecked() && !hasStarted) {

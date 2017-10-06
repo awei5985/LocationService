@@ -8,9 +8,11 @@ public class LoggedIn {
 
     private static LoggedIn logged = new LoggedIn();
     private boolean isLoggedIn;
+    private String fullName;
 
     private LoggedIn(){
         isLoggedIn = false;
+        fullName = "No name provided";
     }
 
     public static LoggedIn getLog(){
@@ -26,6 +28,21 @@ public class LoggedIn {
     public boolean getLoggedIn(){
 
         return isLoggedIn;
+    }
+
+    public String getName(){
+
+        return fullName;
+    }
+
+    public void setName(String fName){
+
+        fullName = fName;
+    }
+
+    public void destroyName(){
+
+        fullName = "DESTROYED";
     }
 
 }

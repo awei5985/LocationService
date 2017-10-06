@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,6 +55,20 @@ public class Snooze extends AppCompatActivity implements TaskCompleted {
         Intent i = getIntent();
         int hours = i.getIntExtra("hours", 1);
         int minutes = i.getIntExtra("mins", 0);
+
+        // if the user did not enter a number of either hours or minutes the default time is 1 hour
+        if ((hours == -1) && (minutes == -1)){
+            Log.v(TAG, "ok, so they were both -1");
+            hours = 1;
+            minutes = 0;
+            Toast.makeText(Snooze.this, "Default snooze time is 1 hour", Toast.LENGTH_SHORT).show();
+        } else if(hours == -1){
+            Log.v(TAG, "ok, hours was -1");
+            hours = 0;
+        } else if(minutes == -1){
+            Log.v(TAG, "ok, minutes was -1");
+            minutes = 0;
+        }
 
         int ms = ((hours * 3600) + minutes * 60) * 1000;
 
@@ -101,8 +116,8 @@ public class Snooze extends AppCompatActivity implements TaskCompleted {
             // from millisUntilFinished figure out how many hours, minutes and seconds to show
             long secsLeft = millisUntilFinished/1000;
             long hours = secsLeft/3600;
-            long minsLeft = (secsLeft % 3600)/60;
-            secsLeft = (secsLeft % 3600) % 60;
+            long minsLeft = (secsLeft - (hours * 3600))/60;
+            secsLeft = ((secsLeft - (hours * 3600)) - (minsLeft * 60));
 
             // making sure it shows 05 instead of 5, not necessary for hours
             if (minsLeft < 10){

@@ -63,6 +63,9 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
                 String birth_city = birthCity.getText().toString();
                 String UID = uid.getText().toString();
 
+                LoggedIn log = LoggedIn.getLog();
+                log.setName(first_name + " " + last_name);
+
                 // this method will use the hash function and return the LUID
                 luid = getLUID(first_name, last_name, birth_date, birth_city, UID);
 
@@ -133,11 +136,9 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
     @Override
     public void onTaskCompleted(String result) {
 
-        Log.v(TAG, "result here was" + result + "|||");
-
         if (result == null){
 
-            Log.v(TAG, "The result was null, probably. Something is wrong.");
+            Log.v(TAG, "The result was null. Something is wrong.");
 
         } else if(result.contains("LUID")){
             // if the LUID was valid go to the consent activity
@@ -146,12 +147,8 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
 
             storeLUID(luid);
             luid = "";
-            String fullName = first_name + " " + last_name;
 
             Intent consentIntent = new Intent(this, ConsentActivity.class);
-            consentIntent.putExtra("name", fullName);
-            first_name = "";
-            last_name = "";
             startActivity(consentIntent);
 
         } else{

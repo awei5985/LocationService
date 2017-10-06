@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -14,6 +15,8 @@ import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle;
 
 public class ConsentActivity extends AppCompatActivity {
+
+    private final String TAG = "Consent Activity";
 
     private Button agreeButton;
     private Button disAgreeButton;
@@ -35,15 +38,10 @@ public class ConsentActivity extends AppCompatActivity {
 
         agreeButton = (Button) findViewById(R.id.agreeBtn);
 
-        Intent i = getIntent();
-        final String fullName = i.getStringExtra("name");
-
-
         agreeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if ((pdfView.getCurrentPage()) == (pdfView.getPageCount()-1)) {
                     Intent emailIntent = new Intent(v.getContext(), SendEmail.class);
-                    emailIntent.putExtra("name", fullName);
                     startActivity(emailIntent);
                 } else {
                     Toast.makeText(getApplicationContext(), "Please scroll down to read the entire consent form",

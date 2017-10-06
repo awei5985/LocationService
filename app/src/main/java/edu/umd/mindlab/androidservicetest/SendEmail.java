@@ -42,12 +42,14 @@ public class SendEmail extends AppCompatActivity {
 
         Log.v(TAG, "Terms pushed in SendEmail");
 
+        // the email is never actually stored anywhere so I don't think there is any need to destroy it.
         email = (EditText) findViewById(R.id.emailEdit);
         sendEmail = (Button) findViewById(R.id.sendConfirmation);
         continueButton = (Button) findViewById(R.id.emailContinueButton);
 
-        Intent i = getIntent();
+        /*Intent i = getIntent();
         final String name = i.getStringExtra("name");
+        Log.v(TAG, "The name is " + name); */
 
         sendEmail.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -73,9 +75,13 @@ public class SendEmail extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
+
+                            LoggedIn log = LoggedIn.getLog();
+                            String name = log.getName();
+
                             EmailSender sender = new EmailSender("PrometheusLoc@gmail.com",
                                     "prometheus");
-                            sender.sendMailAttach("Prometheus Terms and Conditions PDF - " + name, "Do not reply to this email",
+                            sender.sendMailAttach("Prometheus Terms and Conditions PDF - " + name, "Attached is a copy of the consent form",
                                     "PrometheusLoc@gmail.com", email.getText().toString(), file);
                         } catch (Exception e) {
                             Log.e("SendMail", "Sending didn't work?");
@@ -92,6 +98,11 @@ public class SendEmail extends AppCompatActivity {
 
         continueButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
+                LoggedIn log = LoggedIn.getLog();
+                log.destroyName();
+
+                Log.v(TAG, "the name stored is " + log.getName());
 
                 Intent mainIntent = new Intent(v.getContext(), MainActivity.class);
                 startActivity(mainIntent);

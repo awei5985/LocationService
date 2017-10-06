@@ -21,9 +21,8 @@ import android.webkit.WebViewClient;
 
 public class CASLoginActivity extends AppCompatActivity {
 
-    public static final String TAG = "CASLogin Activity";
+    public static final String TAG = "CASLoginActivity";
     public static WebView mWebView;
-
     private static final String TERMS_ACCEPT = "Are_Terms_Accepted";
 
     @Override
@@ -31,9 +30,8 @@ public class CASLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_caslogin);
 
-        Log.v(TAG, "In CAS Login Page");
-
-        // I think this should work because when main starts it sets this to true.
+        // if the user has not logged out, it should take them directly to the main activity
+        // if this causes any problems, just remove it. I think it will be fine without it.
         LoggedIn log = LoggedIn.getLog();
         if (log.getLoggedIn()) {
 
@@ -65,36 +63,27 @@ public class CASLoginActivity extends AppCompatActivity {
 
             @Override
             public void onPageFinished(WebView view, String url){
-                String cookies = CookieManager.getInstance().getCookie(url);
+                CookieManager cookieManager = CookieManager.getInstance();
+                String cookies = cookieManager.getCookie(url);
                 if (url.contains("demo") && cookies.contains("shib_idp_session")) {
                     destroyWebView();
 
-                    ///
-                    CookieManager cookieManager = CookieManager.getInstance();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        cookieManager.removeAllCookies(new ValueCallback<Boolean>() {
-                            // a callback which is executed when the cookies have been removed
-                            @Override
-                            public void onReceiveValue(Boolean aBoolean) {
-                                Log.d(TAG, "Cookie removed: " + aBoolean);
-                            }
-                        });
-                    }
-                    else cookieManager.removeAllCookie();
-                    ///
+                    // the cookies will not contain "login_again" only in the page that comes after CAS login, so let them in then
+                    if(!cookies.contains("login_again")){
 
-                    SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
-                    boolean termsAccepted =  sharedPref.getBoolean(TERMS_ACCEPT, false);
+                        cookieManager.setCookie("https://login.umd.edu/", "shib_idp_session=login_again");
 
-                    if (termsAccepted){
-                        // its possible that this should be view.getContext()?
-                        Intent mainIntent = new Intent(CASLoginActivity.this, MainActivity.class);
-                        startActivity(mainIntent);
+                        SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
+                        boolean termsAccepted =  sharedPref.getBoolean(TERMS_ACCEPT, true);
 
-                    } else {
-
-                        Intent getInfoIntent = new Intent(CASLoginActivity.this, GetPersonalInfo.class);
-                        startActivity(getInfoIntent);
+                        // need to change this back to termsAccepted
+                        if (termsAccepted){
+                            Intent mainIntent = new Intent(CASLoginActivity.this, MainActivity.class);
+                            startActivity(mainIntent);
+                        } else{
+                            Intent getInfoIntent = new Intent(CASLoginActivity.this, GetPersonalInfo.class);
+                            startActivity(getInfoIntent);
+                        }
 
                     }
 
@@ -111,7 +100,7 @@ public class CASLoginActivity extends AppCompatActivity {
     public void destroyWebView() {
 
         // Make sure you remove the WebView from its parent view before doing anything.
-        //mWebView.removeAllViews();
+        mWebView.removeAllViews();
 
         mWebView.clearHistory();
 
@@ -122,7 +111,8 @@ public class CASLoginActivity extends AppCompatActivity {
         // Loading a blank page is optional, but will ensure that the WebView isn't doing anything when you destroy it.
         mWebView.loadUrl("about:blank");
 
-        /*mWebView.onPause();
+        /* starting making changes
+        mWebView.onPause();
         mWebView.removeAllViews();
         mWebView.destroyDrawingCache(); */
 
@@ -130,7 +120,7 @@ public class CASLoginActivity extends AppCompatActivity {
         // do not use if you have other WebViews still alive.
         // If you create another WebView after calling this,
         // make sure to call mWebView.resumeTimers().
-        //mWebView.pauseTimers();
+        // mWebView.pauseTimers();
 
         // NOTE: This can occasionally cause a segfault below API 17 (4.2)
         //mWebView.destroy();
