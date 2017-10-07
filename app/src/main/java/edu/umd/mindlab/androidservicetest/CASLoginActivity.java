@@ -49,6 +49,7 @@ public class CASLoginActivity extends AppCompatActivity {
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         mWebView.loadUrl("https://login.umd.edu/");
+        Log.v(TAG, "Should have loaded login.");
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -114,18 +115,18 @@ public class CASLoginActivity extends AppCompatActivity {
         /* starting making changes
         mWebView.onPause();
         mWebView.removeAllViews();
-        mWebView.destroyDrawingCache(); */
+        mWebView.destroyDrawingCache();
 
         // NOTE: This pauses JavaScript execution for ALL WebViews,
         // do not use if you have other WebViews still alive.
         // If you create another WebView after calling this,
         // make sure to call mWebView.resumeTimers().
-        // mWebView.pauseTimers();
+        mWebView.pauseTimers();
 
         // NOTE: This can occasionally cause a segfault below API 17 (4.2)
-        //mWebView.destroy();
+        mWebView.destroy();
 
         // Null out the reference so that you don't end up re-using it.
-        //mWebView = null;
+        mWebView = null; */
     }
 }
