@@ -30,6 +30,7 @@
             </intent-filter>
         </activity>
 
+
         <service
             android:name=".LocationService"
             android:enabled="true"
@@ -37,17 +38,12 @@
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
+            android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ConsentActivity"
             android:label="@string/title_activity_consent"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".SendDeviceInfo"
-            android:label="@string/title_activity_send_device_info"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait" />
         <activity

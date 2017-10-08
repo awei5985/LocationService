@@ -140,13 +140,21 @@
         android:layout_marginBottom="76dp"
         app:layout_constraintLeft_toLeftOf="@+id/logOutButton" />
 
-    <!--Button
+    <Button
         android:id="@+id/testButton"
         android:layout_width="104dp"
         android:layout_height="113dp"
         android:text="Set Terms Accepted to False"
-        android:layout_marginStart="16dp"
-        tools:layout_editor_absoluteY="306dp"
-        tools:layout_editor_absoluteX="7dp" /-->
+        android:layout_marginStart="7dp"
+        android:layout_marginLeft="-5dp"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="92dp"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="92dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView10"
+        app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>

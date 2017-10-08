@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
 
     private Button logOutButton;
     private Button snoozeButton;
-    //private Button changeLogButton;
+    private Button changeLogButton;
     private EditText hours;
     private EditText minutes;
     private boolean hasStarted;
@@ -104,13 +105,11 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
         */
 
         hasStarted = false;
-
+        //started changes
         switchButton = (Switch)findViewById(R.id.enableloc);
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Log.v(TAG, "The Button has been clicked!!!!!!!!");
 
             if(switchButton.isChecked()) {
 
@@ -208,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
         hours = (EditText) findViewById(R.id.hourEdit);
         minutes = (EditText) findViewById(R.id.minutesEdit);
         snoozeButton = (Button) findViewById(R.id.snoozeButton);
-        //changeLogButton = (Button) findViewById(R.id.testButton);
+        changeLogButton = (Button) findViewById(R.id.testButton);
 
         snoozeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -240,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
             }
         });
 
-        /* changeLogButton is a terrible name, this is for changing the Terms Accepted status (for testing purposes)
+        //changeLogButton is a terrible name, this is for changing the Terms Accepted status (for testing purposes)
         changeLogButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -249,9 +248,10 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
                 editor.commit();
 
                 Log.v(TAG, "It will now act as no consent has been done on login.");
+                Toast.makeText(MainActivity.this, "Now as if you have not consented.", Toast.LENGTH_SHORT).show();
 
             }
-        }); */
+        });
     }
 
     public boolean requestLocPermissions() {

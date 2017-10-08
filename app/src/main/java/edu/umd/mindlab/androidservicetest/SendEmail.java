@@ -40,8 +40,6 @@ public class SendEmail extends AppCompatActivity {
         editor.putBoolean(TERMS_ACCEPT, true);
         editor.commit();
 
-        Log.v(TAG, "Terms pushed in SendEmail");
-
         // the email is never actually stored anywhere so I don't think there is any need to destroy it.
         email = (EditText) findViewById(R.id.emailEdit);
         sendEmail = (Button) findViewById(R.id.sendConfirmation);
@@ -101,8 +99,6 @@ public class SendEmail extends AppCompatActivity {
 
                 LoggedIn log = LoggedIn.getLog();
                 log.destroyName();
-
-                Log.v(TAG, "the name stored is " + log.getName());
 
                 Intent mainIntent = new Intent(v.getContext(), MainActivity.class);
                 startActivity(mainIntent);
