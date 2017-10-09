@@ -48,6 +48,7 @@ public class CASLoginActivity extends AppCompatActivity {
         mWebView.getSettings().setUseWideViewPort(true);
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+
         mWebView.loadUrl("https://login.umd.edu/");
         Log.v(TAG, "Should have loaded login.");
         mWebView.setWebViewClient(new WebViewClient() {
@@ -80,6 +81,7 @@ public class CASLoginActivity extends AppCompatActivity {
                         // need to change this back to termsAccepted
                         if (termsAccepted){
                             Intent mainIntent = new Intent(CASLoginActivity.this, MainActivity.class);
+                            mainIntent.putExtra("CallingActivity","caslogin");
                             startActivity(mainIntent);
                         } else{
                             Intent getInfoIntent = new Intent(CASLoginActivity.this, GetPersonalInfo.class);
@@ -114,7 +116,9 @@ public class CASLoginActivity extends AppCompatActivity {
 
         /* starting making changes
         mWebView.onPause();
-        mWebView.removeAllViews();
+
+        //It was calling this twice, which I guess was causing a problem
+        //mWebView.removeAllViews();
         mWebView.destroyDrawingCache();
 
         // NOTE: This pauses JavaScript execution for ALL WebViews,

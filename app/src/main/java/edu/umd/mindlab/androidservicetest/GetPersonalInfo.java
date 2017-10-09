@@ -134,6 +134,13 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
     }
 
     @Override
+    public void onBackPressed(){
+
+            Intent logIntent = new Intent(GetPersonalInfo.this, CASLoginActivity.class);
+            startActivity(logIntent);
+    }
+
+    @Override
     public void onTaskCompleted(String result) {
 
         if (result == null){

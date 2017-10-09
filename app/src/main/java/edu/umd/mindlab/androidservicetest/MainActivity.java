@@ -367,5 +367,16 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
     }
 
     @Override
+    public void onBackPressed(){
+        Intent i = getIntent();
+        if (i.getStringExtra("CallingActivity").equals("caslogin")){
+            Toast.makeText(MainActivity.this, "If you want to go back to Login, click Logout.", Toast.LENGTH_SHORT).show();
+        } else{
+            Intent emailIntent = new Intent(MainActivity.this, SendEmail.class);
+            startActivity(emailIntent);
+        }
+    }
+
+    @Override
     public void onTaskCompleted(String result) {}
 }

@@ -101,6 +101,7 @@ public class SendEmail extends AppCompatActivity {
                 log.destroyName();
 
                 Intent mainIntent = new Intent(v.getContext(), MainActivity.class);
+                mainIntent.putExtra("CallingActivity","email");
                 startActivity(mainIntent);
 
             }
