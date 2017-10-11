@@ -77,33 +77,6 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
 
         final Intent serviceIntent = new Intent(this, LocationService.class);
 
-        /* new stuff I put in to enable sharing by default
-        switchButton = (Switch)findViewById(R.id.enableloc);
-        SharedPreferences sharedPrefs = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
-        switchButton.setChecked(sharedPrefs.getBoolean(SHARE_LOC_STATUS, true));
-
-        SharedPreferences.Editor editor = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE).edit();
-        editor.putBoolean(SHARE_LOC_STATUS, true);
-        editor.commit();
-
-        switchButton.setChecked(true);
-        startService(serviceIntent);
-        Log.i(TAG, "Main Activity started: Service -> ON");
-
-        SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
-        String LUID = sharedPref.getString(LUID_STORE, "LUID not found");
-
-        JSONObject locStatusJ = new JSONObject();
-        try{
-            locStatusJ.put("LUID",LUID);
-            locStatusJ.put("collecting","on");
-        }catch(JSONException e){
-            Log.e(TAG, "JSON problem");
-        }
-
-        (new SendInfo(MainActivity.this)).execute(locStatusJ);
-        */
-
         hasStarted = false;
         //started changes
         switchButton = (Switch)findViewById(R.id.enableloc);
@@ -176,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
 
                 stopService(serviceIntent);
                 Log.i(TAG, "Logged out -> stop service");
-
                 SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
                 String LUID = sharedPref.getString(LUID_STORE, "LUID not found");
 
@@ -189,6 +161,9 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
                 }
 
                 (new SendInfo(MainActivity.this)).execute(logOutJ);
+                /*
+                Intent logIntent = new Intent(MainActivity.this, LoggedOutActivity.class);
+                startActivity(logIntent); */
 
                 LoggedIn log = LoggedIn.getLog();
                 log.setLoggedIn(false);
@@ -369,11 +344,16 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
     @Override
     public void onBackPressed(){
         Intent i = getIntent();
-        if (i.getStringExtra("CallingActivity").equals("caslogin")){
-            Toast.makeText(MainActivity.this, "If you want to go back to Login, click Logout.", Toast.LENGTH_SHORT).show();
-        } else{
-            Intent emailIntent = new Intent(MainActivity.this, SendEmail.class);
-            startActivity(emailIntent);
+        String extra = i.getStringExtra("CallingActivity");
+        if (extra == null){
+            super.onBackPressed();
+        } else {
+            if (extra.equals("caslogin")) {
+                Toast.makeText(MainActivity.this, "If you want to go back to LogOut, click Logout.", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent emailIntent = new Intent(MainActivity.this, SendEmail.class);
+                startActivity(emailIntent);
+            }
         }
     }
 

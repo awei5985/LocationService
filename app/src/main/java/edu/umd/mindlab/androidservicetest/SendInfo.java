@@ -18,9 +18,9 @@ import java.net.URL;
 public class SendInfo extends AsyncTask<JSONObject, Void, String> {
 
     // public final String URI = "https://safe-scrubland-41744.herokuapp.com/";
-    public final String URIloc = "http://rovermind.cs.umd.edu:8080/LocationServercont2/ContFindLocation";
-    public final String URIluid = "http://rovermind.cs.umd.edu:8080/LocationServercont2/Login";
-    public final String URIstatus = "http://rovermind.cs.umd.edu:8080/LocationServercont2/Status";
+    public final String URIloc = "http://atif01.cs.umd.edu:8009/LocationServercont2/ContFindLocation";
+    public final String URIluid = "http://atif01.cs.umd.edu:8009/LocationServercont2/Login";
+    public final String URIstatus = "http://atif01.cs.umd.edu:8009/LocationServercont2/Status";
     final String TAG = "Send Info";
 
     private Context mContext;

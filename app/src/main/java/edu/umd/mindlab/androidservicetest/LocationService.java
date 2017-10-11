@@ -219,7 +219,7 @@ public class LocationService extends Service implements TaskCompleted
 
         JSONObject obj = new JSONObject();
         JSONArray ap_array = new JSONArray();
-        String timeStamp = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss.SSSSSSSSS").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSSSSSSSS").format(new Date());
 
         for (ScanResult scan : mWifiResults) {
             JSONObject ap = new JSONObject();

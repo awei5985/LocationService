@@ -15,7 +15,7 @@
         android:layout_width="0dp"
         android:layout_height="69dp"
         android:gravity="center"
-        android:text="Location Service is now snoozed. "
+        android:text="Location Service is now snoozed."
         android:textColor="?attr/colorPrimaryDark"
         android:textColorHint="@android:color/darker_gray"
         tools:textSize="18sp"
