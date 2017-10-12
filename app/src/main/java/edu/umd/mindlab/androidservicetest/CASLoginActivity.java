@@ -27,7 +27,7 @@ public class CASLoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        //started making changes
+        // It was necessary to add this reinitializing of the webView for logout to work on my phone
         WebView mWebView = new WebView(CASLoginActivity.this);
         mWebView = (WebView) findViewById(R.id.caswebview);
 
