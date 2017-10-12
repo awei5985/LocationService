@@ -19,12 +19,12 @@
         android:layout_marginTop="69dp"
         android:gravity="center"
         android:text="Location Status"
-        app:layout_constraintBottom_toBottomOf="@+id/textView10"
-        app:layout_constraintHorizontal_bias="0.501"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView10"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/enableloc"
-        app:layout_constraintVertical_bias="0.471"
+        app:layout_constraintTop_toBottomOf="@+id/enableloc"
+        app:layout_constraintVertical_bias="0.7"
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
@@ -35,13 +35,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Enable Location Sharing"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="81dp"
-        tools:layout_constraintLeft_creator="1"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.2"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
     <Button
         android:id="@+id/logOutButton"
@@ -50,26 +52,25 @@
         android:background="@android:color/background_dark"
         android:text="Log Out"
         android:textColor="@android:color/white"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/snoozeButton"
+        app:layout_constraintVertical_bias="0.6" />
 
     <TextView
         android:id="@+id/textView10"
         android:layout_width="200dp"
         android:layout_height="20dp"
-        android:text="Snooze for (hours : minutes):"
         android:gravity="center"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
+        android:text="Snooze for (hours : minutes):"
+        android:textSize="15sp"
         app:layout_constraintBottom_toTopOf="@+id/minutesEdit"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        tools:layout_constraintRight_creator="1" />
 
     <EditText
         android:id="@+id/hourEdit"
@@ -132,30 +133,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Snooze"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/testButton" />
+        android:layout_marginTop="0dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/testButton"
+        app:layout_constraintTop_toBottomOf="@+id/hourEdit"/>
 
     <Button
         android:id="@+id/testButton"
         android:layout_width="258dp"
         android:layout_height="45dp"
         android:text="Set Terms Accepted to False"
-        android:layout_marginStart="7dp"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginBottom="19dp"
-        app:layout_constraintBottom_toTopOf="@+id/logOutButton" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hourEdit"
+        app:layout_constraintVertical_bias="0.4" />
 
 </android.support.constraint.ConstraintLayout>

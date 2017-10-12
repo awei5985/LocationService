@@ -12,45 +12,29 @@
 
     <EditText
         android:id="@+id/firstNameEdit"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="24dp"
+        android:layout_width="150dp"
+        android:layout_height="44dp"
         android:ems="10"
         android:hint="First Name"
         android:inputType="textPersonName|textNoSuggestions"
         android:nextFocusDown="@+id/lastNameEdit"
-        app:layout_constraintRight_toLeftOf="@+id/lastNameEdit"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toBottomOf="@+id/lastNameEdit"
-        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/lastNameEdit"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="20dp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/nameText"
+        android:layout_marginLeft="15dp"
+        app:layout_constraintHorizontal_bias="0.07"/>
 
     <EditText
         android:id="@+id/lastNameEdit"
         android:layout_width="150dp"
         android:layout_height="44dp"
-        android:ems="10"
         android:hint="Last Name"
+        android:nextFocusDown="@+id/dobEdit"
         android:inputType="textPersonName|textNoSuggestions"
-        android:layout_marginEnd="40dp"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toBottomOf="@+id/dobEdit"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="94dp"
-        android:layout_marginBottom="96dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginRight="-366dp"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintLeft_toRightOf="@+id/firstNameEdit"
+        app:layout_constraintTop_toBottomOf="@+id/nameText"
+        android:layout_marginLeft="10dp"
+         />
 
     <EditText
         android:id="@+id/dobEdit"
@@ -59,13 +43,11 @@
         android:ems="10"
         android:hint="e.g. 01/01/00"
         android:inputType="date"
-        android:layout_marginStart="15dp"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toTopOf="@+id/birthCityEdit"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="43dp"
-        app:layout_constraintLeft_toLeftOf="@+id/textView3"
-        android:layout_marginLeft="15dp" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintTop_toBottomOf="@+id/dobText"/>
+
 
     <EditText
         android:id="@+id/birthCityEdit"
@@ -74,13 +56,10 @@
         android:ems="10"
         android:hint="e.g. College Park"
         android:inputType="textPersonName|textNoSuggestions"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toTopOf="@+id/uidEdit"
-        app:layout_constraintRight_toRightOf="@+id/dobEdit"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="45dp"
-        app:layout_constraintLeft_toLeftOf="@+id/dobEdit" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintTop_toBottomOf="@+id/birthCityText" />
 
     <EditText
         android:id="@+id/uidEdit"
@@ -89,89 +68,72 @@
         android:ems="10"
         android:hint="e.g. 123456789"
         android:inputType="number"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="@+id/birthCityEdit"
-        android:layout_marginTop="0dp"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/birthCityEdit"
-        app:layout_constraintTop_toTopOf="@+id/textView5"
-        app:layout_constraintHorizontal_bias="1.0" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintTop_toBottomOf="@id/uidText" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/nameText"
         android:layout_width="241dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="44dp"
-        android:layout_marginTop="32dp"
         android:text="Name (enter exactly as registered with University)"
-        app:layout_constraintBottom_toBottomOf="@+id/firstNameEdit"
-        app:layout_constraintLeft_toLeftOf="@+id/firstNameEdit"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1"
-        android:layout_marginLeft="-8dp" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Date of Birth (mm/dd/yyyy)"
-        app:layout_constraintBottom_toTopOf="@+id/dobEdit"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="@+id/firstNameEdit"
-        app:layout_constraintRight_toLeftOf="@+id/lastNameEdit"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/firstNameEdit"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="86dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="87dp"
-        android:text="Birth City"
-        app:layout_constraintBottom_toTopOf="@+id/uidEdit"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView3"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.1"
+        android:layout_marginBottom="5dp"/>
 
     <TextView
-        android:id="@+id/textView5"
-        android:layout_width="200dp"
+        android:id="@+id/dobText"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="147dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginLeft="25dp"
+        android:text="Date of Birth (mm/dd/yyyy)"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.3" />
+
+    <TextView
+        android:id="@+id/birthCityText"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
+        android:text="Birth City"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.48" />
+
+    <TextView
+        android:id="@+id/uidText"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dp"
         android:text="UID"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintLeft_toLeftOf="parent"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.66" />
 
     <Button
         android:id="@+id/submitPersInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Submit Info"
-        android:layout_marginEnd="15dp"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="@+id/uidEdit"
-        android:layout_marginBottom="54dp"
-        android:layout_marginRight="30dp" />
+        app:layout_constraintTop_toBottomOf="@id/uidEdit"/>
 
 </android.support.constraint.ConstraintLayout>
 
