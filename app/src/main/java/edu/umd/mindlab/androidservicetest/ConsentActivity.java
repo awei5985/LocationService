@@ -40,7 +40,7 @@ public class ConsentActivity extends AppCompatActivity {
 
         agreeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if ((pdfView.getCurrentPage()) == (pdfView.getPageCount()-1)) {
+                if ((pdfView.getCurrentPage()) >= (pdfView.getPageCount()-2)) {
                     Intent emailIntent = new Intent(v.getContext(), SendEmail.class);
                     startActivity(emailIntent);
                 } else {

@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
 
     private Button logOutButton;
     private Button snoozeButton;
-    private Button changeLogButton;
+    //private Button changeLogButton;
     private EditText hours;
     private EditText minutes;
     private boolean hasStarted;
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
         hours = (EditText) findViewById(R.id.hourEdit);
         minutes = (EditText) findViewById(R.id.minutesEdit);
         snoozeButton = (Button) findViewById(R.id.snoozeButton);
-        changeLogButton = (Button) findViewById(R.id.testButton);
+        //changeLogButton = (Button) findViewById(R.id.testButton);
 
         snoozeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
         });
 
         //changeLogButton is a terrible name, this is for changing the Terms Accepted status (for testing purposes)
-        changeLogButton.setOnClickListener(new View.OnClickListener() {
+        /*changeLogButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 SharedPreferences.Editor editor = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE).edit();
@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
                 Toast.makeText(MainActivity.this, "Now as if you have not consented.", Toast.LENGTH_SHORT).show();
 
             }
-        });
+        }); */
     }
 
     public boolean requestLocPermissions() {
