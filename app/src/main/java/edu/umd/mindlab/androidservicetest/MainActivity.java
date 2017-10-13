@@ -341,6 +341,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
         return super.onOptionsItemSelected(item);
     }
 
+    /*
     @Override
     public void onBackPressed(){
         Intent i = getIntent();
@@ -355,7 +356,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
                 startActivity(emailIntent);
             }
         }
-    }
+    } */
 
     @Override
     public void onTaskCompleted(String result) {}

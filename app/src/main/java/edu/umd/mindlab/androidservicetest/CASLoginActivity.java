@@ -21,11 +21,19 @@ public class CASLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_caslogin);
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        // check if the user is logged in
+        LoggedIn log = LoggedIn.getLog();
+        if (log.getLoggedIn()) {
+            Intent mainIntent = new Intent(CASLoginActivity.this, MainActivity.class);
+            startActivity(mainIntent);
+        }
 
         // It was necessary to add this reinitializing of the webView for logout to work on my phone
         WebView mWebView = new WebView(CASLoginActivity.this);
@@ -72,7 +80,7 @@ public class CASLoginActivity extends AppCompatActivity {
                         Log.v(TAG, "CASLoginActivity:CreateView:WebViewClient:OnPageFinished TermsAccepted Check, CASLogin Complete");
 
                         Intent mainIntent = new Intent(CASLoginActivity.this, MainActivity.class);
-                        mainIntent.putExtra("CallingActivity", "caslogin");
+                        //mainIntent.putExtra("CallingActivity", "caslogin");
                         startActivity(mainIntent);
 
                     } else {

@@ -93,7 +93,8 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
     // This is the method where the info is hashed and the LUID is retured.
     public String getLUID(String first, String last, String dob, String birthD, String birthC){
 
-        return "android_test2";
+        String deviceID =  Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        return deviceID;
 
     }
 
