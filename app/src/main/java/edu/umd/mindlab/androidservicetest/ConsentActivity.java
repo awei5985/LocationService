@@ -22,7 +22,7 @@ public class ConsentActivity extends AppCompatActivity {
     private Button disAgreeButton;
     String pdfFileName;
 
-    public static final String SAMPLE_FILE = "Consent_Smartphone_App.pdf";
+    public static final String SAMPLE_FILE = "Consent_Smartphone_App2.pdf";
     PDFView pdfView;
     Integer pageNumber = 0;
 

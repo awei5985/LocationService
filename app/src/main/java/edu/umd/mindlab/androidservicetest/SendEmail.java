@@ -56,7 +56,7 @@ public class SendEmail extends AppCompatActivity {
                 InputStream inputStream = null;
                 ByteArrayOutputStream output = null;
                 try {
-                    inputStream = getAssets().open("Consent_Smartphone_App.pdf");
+                    inputStream = getAssets().open("Consent_Smartphone_App2.pdf");
                     byte[] buffer = new byte[8192];
                     int bytesRead;
                     output = new ByteArrayOutputStream();
@@ -78,10 +78,17 @@ public class SendEmail extends AppCompatActivity {
                             LoggedIn log = LoggedIn.getLog();
                             String name = log.getName();
 
+                            // send the pdf to the user
                             EmailSender sender = new EmailSender("PrometheusLoc@gmail.com",
                                     "prometheus");
                             sender.sendMailAttach("Prometheus Terms and Conditions PDF - " + name, "Attached is a copy of the consent form",
-                                    "PrometheusLoc@gmail.com", email.getText().toString(), file);
+                                    "PrometheusLoc@gmail.com", email.getText().toString() + ", catch@umd.edu", file);
+
+                            /*
+                            EmailSender sender = new EmailSender("PrometheusLoc@gmail.com",
+                                    "prometheus");
+                            sender.sendMailAttach("Prometheus Terms and Conditions PDF - " + name, "Attached is a copy of the consent form",
+                                    "PrometheusLoc@gmail.com", email.getText().toString(), file); */
                         } catch (Exception e) {
                             Log.e("SendMail", "Sending didn't work?");
                         }

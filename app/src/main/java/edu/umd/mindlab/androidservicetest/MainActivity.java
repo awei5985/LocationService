@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
 
     private Button logOutButton;
     private Button snoozeButton;
-    //private Button changeLogButton;
+    private Button changeLogButton;
     private EditText hours;
     private EditText minutes;
     private boolean hasStarted;
@@ -182,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
         hours = (EditText) findViewById(R.id.hourEdit);
         minutes = (EditText) findViewById(R.id.minutesEdit);
         snoozeButton = (Button) findViewById(R.id.snoozeButton);
-        //changeLogButton = (Button) findViewById(R.id.testButton);
+        changeLogButton = (Button) findViewById(R.id.testButton);
 
         snoozeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -215,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
         });
 
         //changeLogButton is a terrible name, this is for changing the Terms Accepted status (for testing purposes)
-        /*changeLogButton.setOnClickListener(new View.OnClickListener() {
+        changeLogButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
                 SharedPreferences.Editor editor = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE).edit();
@@ -226,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
                 Toast.makeText(MainActivity.this, "Now as if you have not consented.", Toast.LENGTH_SHORT).show();
 
             }
-        }); */
+        });
     }
 
     public boolean requestLocPermissions() {
@@ -268,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
         SharedPreferences sharedPrefs = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
         switchButton.setChecked(sharedPrefs.getBoolean(SHARE_LOC_STATUS, true));
 
-
+        TextView tv = (TextView) findViewById(R.id.textLocation);
         if(switchButton.isChecked() && !hasStarted) {
             final Intent serviceIntent = new Intent(this, LocationService.class);
             // restart service
@@ -288,8 +289,9 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
 
             (new SendInfo(MainActivity.this)).execute(logOutJ);
 
-            TextView tv = (TextView) findViewById(R.id.textLocation);
             tv.setText("Currently sharing your location");
+        } else{
+            tv.setText("Not sharing your location");
         }
 
         super.onResume();

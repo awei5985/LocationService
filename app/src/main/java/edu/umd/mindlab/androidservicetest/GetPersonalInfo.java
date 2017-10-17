@@ -17,7 +17,8 @@ import android.widget.Toast;
 
 import android.telephony.TelephonyManager;
 import android.os.Build;
-
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -66,8 +67,14 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
                 LoggedIn log = LoggedIn.getLog();
                 log.setName(first_name + " " + last_name);
 
-                // this method will use the hash function and return the LUID
-                luid = getLUID(first_name, last_name, birth_date, birth_city, UID);
+                String infoToHash = last_name + birth_date + UID;
+                infoToHash = infoToHash.replace(" ", "");
+
+                // this method will use the hash function and return the LUID. Passing the info as a concatenated string
+                luid = getLUID(infoToHash);
+
+                Log.v(TAG, "Info to Hash: " + infoToHash);
+                Log.v(TAG, "Hash: " + luid);
 
                 // this method will gather the device about the phone and package it (with LUID) in a JSON
                 JSONObject infoJSON = getDeviceInfo(luid);
@@ -91,10 +98,29 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
     }
 
     // This is the method where the info is hashed and the LUID is retured.
-    public String getLUID(String first, String last, String dob, String birthD, String birthC){
+    public String getLUID(String strToHash){
 
-        String deviceID =  Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        return deviceID;
+        String generatedHash = null;
+        StringBuilder sb = null;
+
+        try {
+
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            // I think maybe I should have the "UTF-8" argument as well, but for now, na
+            byte[] bytes = md.digest(strToHash.getBytes());
+
+            sb = new StringBuilder();
+            for(int i=0; i< bytes.length ;i++){
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+
+            generatedHash = sb.toString();
+
+        }catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+        }
+
+        return generatedHash;
 
     }
 

@@ -38,13 +38,13 @@
             android:exported="false" />
 
         <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main"
+            android:name=".GetPersonalInfo"
+            android:label="@string/title_activity_get_personal_info"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ConsentActivity"
-            android:label="@string/title_activity_consent"
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -53,8 +53,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".GetPersonalInfo"
-            android:label="@string/title_activity_get_personal_info"
+            android:name=".ConsentActivity"
+            android:label="@string/title_activity_consent"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

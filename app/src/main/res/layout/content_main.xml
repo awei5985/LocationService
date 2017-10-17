@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:background="@android:color/darker_gray"
     tools:context="edu.umd.mindlab.androidservicetest.MainActivity"
@@ -20,6 +21,7 @@
         android:gravity="center"
         android:text="Location Status"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/textView10"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -65,6 +67,7 @@
         android:gravity="center"
         android:text="Snooze for (hours : minutes):"
         android:textSize="15sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/minutesEdit"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -77,21 +80,22 @@
         android:layout_width="45dp"
         android:layout_height="43dp"
         android:layout_marginEnd="27dp"
+        android:layout_marginLeft="42dp"
+        android:layout_marginRight="27dp"
         android:layout_marginStart="42dp"
         android:ems="10"
         android:gravity="center"
         android:hint="00"
         android:inputType="number"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="@+id/Colon"
-        tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="@+id/textView10"
+        app:layout_constraintRight_toRightOf="@+id/Colon"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="42dp"
-        android:layout_marginRight="27dp" />
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
     <TextView
         android:id="@+id/Colon"
@@ -111,22 +115,23 @@
         android:id="@+id/minutesEdit"
         android:layout_width="45dp"
         android:layout_height="43dp"
+        android:layout_marginEnd="41dp"
+        android:layout_marginLeft="27dp"
+        android:layout_marginRight="41dp"
+        android:layout_marginStart="27dp"
         android:ems="10"
         android:gravity="center"
         android:hint="00"
         android:inputType="number"
-        android:layout_marginStart="27dp"
-        android:layout_marginEnd="41dp"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="@+id/textView10"
-        tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="@+id/Colon"
+        app:layout_constraintRight_toRightOf="@+id/textView10"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="27dp"
-        android:layout_marginRight="41dp" />
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
     <Button
         android:id="@+id/snoozeButton"
@@ -143,7 +148,7 @@
         app:layout_constraintTop_toBottomOf="@+id/hourEdit"
         app:layout_constraintVertical_bias="0.2"/>
 
-    <!--Button
+    <Button
         android:id="@+id/testButton"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -153,6 +158,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/hourEdit"
         app:layout_constraintVertical_bias="0.4"
-        app:layout_constraintHorizontal_bias="0.05"/-->
+        app:layout_constraintHorizontal_bias="0.05"/>
 
 </android.support.constraint.ConstraintLayout>
