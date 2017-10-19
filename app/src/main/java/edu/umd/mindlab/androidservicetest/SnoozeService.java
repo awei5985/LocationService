@@ -4,9 +4,17 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.widget.TextView;
 
 public class SnoozeService extends Service {
+
+    public final String TAG = "Snooze Service";
+    private Counter timeCount;
+    private final String TIME_FILTER = "TimeFilter";
+    private final String FINISH_FILTER = "FinishFilter";
+
     public SnoozeService() {
     }
 
@@ -20,14 +28,20 @@ public class SnoozeService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startID){
 
+        Log.v(TAG, "Snoozing Started");
 
+        int hours = intent.getIntExtra("hours", 1);
+        int minutes = intent.getIntExtra("minutes", 1);
+
+        int ms = ((hours * 3600) + minutes * 60) * 1000;
+        timeCount = new Counter(ms,1000);
+
+        timeCount.start();
 
         return START_STICKY;
     }
 
     public class Counter extends CountDownTimer {
-
-        TextView countD;
 
         public Counter(long millisInFuture, long countDownInterval) {
             super(millisInFuture,countDownInterval);
@@ -55,14 +69,21 @@ public class SnoozeService extends Service {
                 secsStr = "" + secsLeft;
             }
 
-            countD.setText(hours + " : " + minsStr + " : " + secsStr);
-        }
+            //started making changes
 
-        public void setCounterText(TextView c){
-            countD = c;
+            sendInfo(hours, minsStr, secsStr);
+            //sendBroadcast(intent);
         }
 
         public void onFinish() {
+
+            Intent intent = new Intent(FINISH_FILTER);
+
+            Log.v(TAG, "Snoozing finished");
+
+            LocalBroadcastManager.getInstance(SnoozeService.this).sendBroadcast(intent);
+
+            Log.v(TAG, "Finished Broadcast sent");
 
             // on finish I'll just senda broadcast to the snooze activity, telling it its done
             /*
@@ -71,5 +92,23 @@ public class SnoozeService extends Service {
 
         }
 
+    }
+
+    public void sendInfo(long hours, String mins, String secs){
+        Intent intent = new Intent(TIME_FILTER);
+        intent.putExtra("hours", hours);
+        intent.putExtra("minutes", mins);
+        intent.putExtra("seconds", secs);
+
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+        Log.v(TAG, "Time Broadcast Sent");
+        Log.v(TAG, "Time was: " + hours + " : " + mins + " : " + secs);
+    }
+
+    @Override
+    public void onDestroy(){
+        timeCount.cancel();;
+        stopSelf();
     }
 }

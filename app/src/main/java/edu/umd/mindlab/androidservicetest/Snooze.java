@@ -1,11 +1,15 @@
 package edu.umd.mindlab.androidservicetest;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,6 +29,8 @@ public class Snooze extends AppCompatActivity implements TaskCompleted {
     private Button cancelButton;
     private final String TAG = "Snooze Activity";
     private final String LUID_STORE = "The_LUID_is_stored";
+    private final String TIME_FILTER = "TimeFilter";
+    private final String FINISH_FILTER = "FinishFilter";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +39,48 @@ public class Snooze extends AppCompatActivity implements TaskCompleted {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-       //Log.v(TAG,"The time is " + minutes + " mins and " + seconds + " secs.");
+        /*Log.v(TAG,"The time is " + minutes + " mins and " + seconds + " secs.");
 
+        Intent i = getIntent();
+        int hours = i.getIntExtra("hours", 1);
+        int minutes = i.getIntExtra("mins", 0);
+
+        if ((hours == -1) && (minutes == -1)){
+            Log.v(TAG, "ok, so they were both -1");
+            hours = 1;
+            minutes = 0;
+            Toast.makeText(Snooze.this, "Default snooze time is 1 hour", Toast.LENGTH_SHORT).show();
+        } else if(hours == -1){
+            Log.v(TAG, "ok, hours was -1");
+            hours = 0;
+        } else if(minutes == -1){
+            Log.v(TAG, "ok, minutes was -1");
+            minutes = 0;
+        }
+
+        final Intent startSnooze = new Intent(this, SnoozeService.class);
+        startSnooze.putExtra("hours", hours);
+        startSnooze.putExtra("minutes", minutes);
+        startService(startSnooze);
+
+        IntentFilter intentF = new IntentFilter(TIME_FILTER);
+        registerReceiver(timeReceiver, intentF);
+
+        IntentFilter intentTime = new IntentFilter(FINISH_FILTER);
+        registerReceiver(finishedReceiver, intentTime);
+
+        cancelButton = (Button) findViewById(R.id.cancelSnooze);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                stopService(startSnooze);
+                Intent mainIntent = new Intent(v.getContext(), MainActivity.class);
+                startActivity(mainIntent);
+
+            }
+        });
+
+        /*
         SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
         String LUID = sharedPref.getString(LUID_STORE, "doesn't exist");
 
@@ -102,7 +148,7 @@ public class Snooze extends AppCompatActivity implements TaskCompleted {
             }
         }); */
     }
-
+/*
     public class Counter extends CountDownTimer{
 
         TextView countD;
@@ -147,8 +193,76 @@ public class Snooze extends AppCompatActivity implements TaskCompleted {
 
         }
 
+    } */
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        Intent i = getIntent();
+        int hours = i.getIntExtra("hours", 1);
+        int minutes = i.getIntExtra("mins", 0);
+
+        if ((hours == -1) && (minutes == -1)){
+            Log.v(TAG, "ok, so they were both -1");
+            hours = 1;
+            minutes = 0;
+            Toast.makeText(Snooze.this, "Default snooze time is 1 hour", Toast.LENGTH_SHORT).show();
+        } else if(hours == -1){
+            Log.v(TAG, "ok, hours was -1");
+            hours = 0;
+        } else if(minutes == -1){
+            Log.v(TAG, "ok, minutes was -1");
+            minutes = 0;
+        }
+
+        final Intent startSnooze = new Intent(this, SnoozeService.class);
+        startSnooze.putExtra("hours", hours);
+        startSnooze.putExtra("minutes", minutes);
+        startService(startSnooze);
+
+        IntentFilter intentF = new IntentFilter(TIME_FILTER);
+        registerReceiver(timeReceiver, intentF);
+
+        IntentFilter intentTime = new IntentFilter(FINISH_FILTER);
+        registerReceiver(finishedReceiver, intentTime);
+
+        cancelButton = (Button) findViewById(R.id.cancelSnooze);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                stopService(startSnooze);
+                Intent mainIntent = new Intent(v.getContext(), MainActivity.class);
+                startActivity(mainIntent);
+
+            }
+        });
     }
 
     public void onTaskCompleted(String result){}
 
+    public BroadcastReceiver timeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            Log.v(TAG, "Time Broadcast Received");
+            int h = intent.getIntExtra("hours", 1);
+            String m = intent.getStringExtra("minutes");
+            String s = intent.getStringExtra("seconds");
+
+            counter.setText(h + " : " + m + " : " + s);
+        }
+    };
+
+    public BroadcastReceiver finishedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //stopService(startSnooze);
+
+            Log.v(TAG, "Finished Broadcast Received");
+
+            Intent mainIntent = new Intent(Snooze.this, MainActivity.class);
+            startActivity(mainIntent);
+        }
+    };
 }
