@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
 
     private Button logOutButton;
     private Button snoozeButton;
-    private Button changeLogButton;
+    //private Button changeLogButton;
     private EditText hours;
     private EditText minutes;
     private boolean hasStarted;
@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // if the user comes back to the app (and never logged out) and it tries to take them to the login activity it will redirect here.
         LoggedIn log = LoggedIn.getLog();
         log.setLoggedIn(true);
 
@@ -162,12 +163,11 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
                 }
 
                 (new SendInfo(MainActivity.this)).execute(logOutJ);
-                /*
-                Intent logIntent = new Intent(MainActivity.this, LoggedOutActivity.class);
-                startActivity(logIntent); */
 
                 LoggedIn log = LoggedIn.getLog();
                 log.setLoggedIn(false);
+                //starting changes
+                log.setMain(true);
 
                 Intent logIntent = new Intent(v.getContext(), CASLoginActivity.class);
                 startActivity(logIntent);
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
         hours = (EditText) findViewById(R.id.hourEdit);
         minutes = (EditText) findViewById(R.id.minutesEdit);
         snoozeButton = (Button) findViewById(R.id.snoozeButton);
-        changeLogButton = (Button) findViewById(R.id.testButton);
+        //changeLogButton = (Button) findViewById(R.id.testButton);
 
         snoozeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
             }
         });
 
-        //changeLogButton is a terrible name, this is for changing the Terms Accepted status (for testing purposes)
+        /*changeLogButton is a terrible name, this is for changing the Terms Accepted status (for testing purposes)
         changeLogButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
                 Toast.makeText(MainActivity.this, "Now as if you have not consented.", Toast.LENGTH_SHORT).show();
 
             }
-        });
+        }); */
     }
 
     public boolean requestLocPermissions() {
@@ -343,22 +343,13 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
         return super.onOptionsItemSelected(item);
     }
 
-    /*
     @Override
     public void onBackPressed(){
-        Intent i = getIntent();
-        String extra = i.getStringExtra("CallingActivity");
-        if (extra == null){
-            super.onBackPressed();
-        } else {
-            if (extra.equals("caslogin")) {
-                Toast.makeText(MainActivity.this, "If you want to go back to LogOut, click Logout.", Toast.LENGTH_SHORT).show();
-            } else {
-                Intent emailIntent = new Intent(MainActivity.this, SendEmail.class);
-                startActivity(emailIntent);
-            }
-        }
-    } */
+        LoggedIn log = LoggedIn.getLog();
+        log.setMain(true);
+
+        super.onBackPressed();
+    }
 
     @Override
     public void onTaskCompleted(String result) {}

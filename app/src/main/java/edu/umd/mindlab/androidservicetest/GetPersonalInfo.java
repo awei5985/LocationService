@@ -162,9 +162,10 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
 
     @Override
     public void onBackPressed(){
+        LoggedIn log = LoggedIn.getLog();
+        log.setMain(true);
 
-            Intent logIntent = new Intent(GetPersonalInfo.this, CASLoginActivity.class);
-            startActivity(logIntent);
+        super.onBackPressed();
     }
 
     @Override

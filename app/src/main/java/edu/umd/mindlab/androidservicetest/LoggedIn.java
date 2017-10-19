@@ -9,10 +9,13 @@ public class LoggedIn {
     private static LoggedIn logged = new LoggedIn();
     private boolean isLoggedIn;
     private String fullName;
+    //started making changes
+    private boolean goToMain;
 
     private LoggedIn(){
         isLoggedIn = false;
         fullName = "No name provided";
+        goToMain = true;
     }
 
     public static LoggedIn getLog(){
@@ -45,4 +48,11 @@ public class LoggedIn {
         fullName = "DESTROYED";
     }
 
+    public void setMain(boolean value){
+        goToMain = value;
+    }
+
+    public boolean getMain(){
+        return goToMain;
+    }
 }

@@ -73,24 +73,33 @@ public class CASLoginActivity extends AppCompatActivity {
 
                     destroyWebView();
 
+                    Log.v(TAG, "the page is finish: " + url);
+
                     SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
                     boolean termsAccepted = sharedPref.getBoolean(TERMS_ACCEPT, false);
 
-                    if (termsAccepted) {
-                        Log.v(TAG, "CASLoginActivity:CreateView:WebViewClient:OnPageFinished TermsAccepted Check, CASLogin Complete");
+                    // prevents the next activity from being started twice
+                    LoggedIn log = LoggedIn.getLog();
+                    if (log.getMain()) {
+                        log.setMain(false);
 
-                        Intent mainIntent = new Intent(CASLoginActivity.this, MainActivity.class);
-                        //mainIntent.putExtra("CallingActivity", "caslogin");
-                        startActivity(mainIntent);
+                        if (termsAccepted) {
+                            Log.v(TAG, "CASLoginActivity:CreateView:WebViewClient:OnPageFinished TermsAccepted Check, CASLogin Complete");
 
-                    } else {
-                        Log.v(TAG, "CASLoginActivity:CreateView:WebViewClient:OnPageFinished TermsAccepted False");
+                            //started making changes
+                            Intent mainIntent = new Intent(CASLoginActivity.this, MainActivity.class);
+                            //mainIntent.putExtra("CallingActivity", "caslogin");
+                            startActivity(mainIntent);
 
-                        Intent getInfoIntent = new Intent(CASLoginActivity.this, GetPersonalInfo.class);
-                        startActivity(getInfoIntent);
 
+                        } else {
+                            Log.v(TAG, "CASLoginActivity:CreateView:WebViewClient:OnPageFinished TermsAccepted False");
+
+                            Intent getInfoIntent = new Intent(CASLoginActivity.this, GetPersonalInfo.class);
+                            startActivity(getInfoIntent);
+
+                        }
                     }
-
                 }
             }
         });
@@ -98,7 +107,7 @@ public class CASLoginActivity extends AppCompatActivity {
 
     public void destroyWebView() {
 
-        //put this in
+        // catch anytime it would be trying to destroy a null webview
         if (mWebView == null){
             return;
         }
@@ -138,5 +147,12 @@ public class CASLoginActivity extends AppCompatActivity {
     protected void onStop(){
         super.onStop();
         destroyWebView();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        LoggedIn log = LoggedIn.getLog();
+        log.setMain(true);
     }
 }

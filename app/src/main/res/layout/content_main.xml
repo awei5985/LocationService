@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
 
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:background="@android:color/darker_gray"
+    android:background="@drawable/gradient"
     tools:context="edu.umd.mindlab.androidservicetest.MainActivity"
     tools:showIn="@layout/activity_main"
     tools:layout_editor_absoluteY="81dp"
@@ -148,7 +148,7 @@
         app:layout_constraintTop_toBottomOf="@+id/hourEdit"
         app:layout_constraintVertical_bias="0.2"/>
 
-    <Button
+    <!--Button
         android:id="@+id/testButton"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -158,6 +158,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/hourEdit"
         app:layout_constraintVertical_bias="0.4"
-        app:layout_constraintHorizontal_bias="0.05"/>
+        app:layout_constraintHorizontal_bias="0.05"/ -->
 
 </android.support.constraint.ConstraintLayout>

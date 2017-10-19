@@ -75,6 +75,8 @@ public class Snooze extends AppCompatActivity implements TaskCompleted {
         counter = (TextView) findViewById(R.id.countDown);
         cancelButton = (Button) findViewById(R.id.cancelSnooze);
 
+        // now send the info to the service
+
         final Counter timeCount = new Counter(ms,1000);
 
         timeCount.setCounterText(counter);
