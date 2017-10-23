@@ -92,18 +92,8 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
                 startService(serviceIntent);
                 Log.i(TAG, "Switch button clicked on -> start service");
 
-                SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
-                String LUID = sharedPref.getString(LUID_STORE, "LUID not found");
-
-                JSONObject locStatusJ = new JSONObject();
-                try{
-                    locStatusJ.put("LUID",LUID);
-                    locStatusJ.put("collecting","on");
-                }catch(JSONException e){
-                    Log.e(TAG, "JSON problem");
-                }
-
-                (new SendInfo(MainActivity.this)).execute(locStatusJ);
+                // tell server status is 'collecting: on'
+                sendStatus("on");
 
                 hasStarted = true;
 
@@ -120,18 +110,8 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
                 stopService(serviceIntent);
                 Log.i(TAG, "Switch button clicked on -> stop service");
 
-                SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
-                String LUID = sharedPref.getString(LUID_STORE, "LUID not found");
-
-                JSONObject locStatusJ = new JSONObject();
-                try{
-                    locStatusJ.put("LUID",LUID);
-                    locStatusJ.put("collecting","off");
-                }catch(JSONException e){
-                    Log.e(TAG, "JSON problem");
-                }
-
-                (new SendInfo(MainActivity.this)).execute(locStatusJ);
+                // tell server that status is 'collecting: off'
+                sendStatus("off");
 
                 hasStarted = false;
 
@@ -151,18 +131,9 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
 
                 stopService(serviceIntent);
                 Log.i(TAG, "Logged out -> stop service");
-                SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
-                String LUID = sharedPref.getString(LUID_STORE, "LUID not found");
 
-                JSONObject logOutJ = new JSONObject();
-                try{
-                    logOutJ.put("LUID",LUID);
-                    logOutJ.put("collecting","off");
-                }catch(JSONException e){
-                    Log.e(TAG, "JSON problem");
-                }
-
-                (new SendInfo(MainActivity.this)).execute(logOutJ);
+                // tell server that status is 'collecting: off'
+                sendStatus("off");
 
                 LoggedIn log = LoggedIn.getLog();
                 log.setLoggedIn(false);
@@ -205,6 +176,8 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
 
                 stopService(serviceIntent);
                 Log.i(TAG, "Snoozed -> stop service");
+
+                sendStatus("snoozed");
 
                 // call the snooze activity and pass the time to snooze
                 Intent snoozeIntent = new Intent(v.getContext(), Snooze.class);
@@ -276,18 +249,8 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
             stopService(serviceIntent);
             startService(serviceIntent);
 
-            SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
-            String LUID = sharedPref.getString(LUID_STORE, "LUID not found");
-
-            JSONObject logOutJ = new JSONObject();
-            try{
-                logOutJ.put("LUID",LUID);
-                logOutJ.put("collecting","on");
-            }catch(JSONException e){
-                Log.e(TAG, "JSON problem");
-            }
-
-            (new SendInfo(MainActivity.this)).execute(logOutJ);
+            // tell server that status is 'collecting: on'
+            sendStatus("on");
 
             tv.setText("Currently sharing your location");
         } else{
@@ -349,6 +312,27 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
         log.setMain(true);
 
         super.onBackPressed();
+    }
+
+    // This method sends the collecting status to the server
+    public void sendStatus(String status){
+
+        // get the LUID from shared preferences
+        SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
+        String LUID = sharedPref.getString(LUID_STORE, "doesn't exist");
+
+        // create the JSON to send to the server
+        JSONObject disconJ = new JSONObject();
+        try{
+            disconJ.put("LUID", LUID);
+            disconJ.put("collecting",status);
+        }catch(JSONException e){
+            Log.v(TAG, "JSON problem?");
+        }
+
+        // send the JSON
+        (new SendInfo(MainActivity.this)).execute(disconJ);
+
     }
 
     @Override

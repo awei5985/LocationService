@@ -19,6 +19,11 @@ public class SnoozeService extends Service {
     }
 
     @Override
+    public void onCreate(){
+        Log.v(TAG, "In onCreate");
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
         /* TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented"); */
@@ -28,17 +33,21 @@ public class SnoozeService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startID){
 
-        Log.v(TAG, "Snoozing Started");
+        handleCommand(intent);
+        return START_STICKY;
 
-        int hours = intent.getIntExtra("hours", 1);
-        int minutes = intent.getIntExtra("minutes", 1);
+    }
+
+    public void handleCommand(Intent i){
+
+        int hours = i.getIntExtra("hours", 1);
+        int minutes = i.getIntExtra("minutes", 1);
 
         int ms = ((hours * 3600) + minutes * 60) * 1000;
         timeCount = new Counter(ms,1000);
 
         timeCount.start();
 
-        return START_STICKY;
     }
 
     public class Counter extends CountDownTimer {
@@ -69,46 +78,38 @@ public class SnoozeService extends Service {
                 secsStr = "" + secsLeft;
             }
 
-            //started making changes
+            sendTime(hours, minsStr, secsStr);
 
-            sendInfo(hours, minsStr, secsStr);
-            //sendBroadcast(intent);
         }
 
         public void onFinish() {
-
-            Intent intent = new Intent(FINISH_FILTER);
-
             Log.v(TAG, "Snoozing finished");
-
-            LocalBroadcastManager.getInstance(SnoozeService.this).sendBroadcast(intent);
-
-            Log.v(TAG, "Finished Broadcast sent");
-
-            // on finish I'll just senda broadcast to the snooze activity, telling it its done
-            /*
-            Intent mainIntent = new Intent(Snooze.this, MainActivity.class);
-            startActivity(mainIntent); */
-
+            sendFinished();
         }
 
     }
 
-    public void sendInfo(long hours, String mins, String secs){
-        Intent intent = new Intent(TIME_FILTER);
-        intent.putExtra("hours", hours);
-        intent.putExtra("minutes", mins);
-        intent.putExtra("seconds", secs);
+    public void sendTime(long hours, String mins, String secs){
+
+        Intent intent = new Intent("timeSent");
+        String time = hours + " : " + mins + " : " + secs;
+        intent.putExtra("time", time);
 
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
-        Log.v(TAG, "Time Broadcast Sent");
-        Log.v(TAG, "Time was: " + hours + " : " + mins + " : " + secs);
+    }
+
+    public void sendFinished(){
+
+        Intent intent = new Intent("finished");
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     @Override
     public void onDestroy(){
-        timeCount.cancel();;
+
+        timeCount.cancel();
+        Log.v(TAG, "in onDestroy");
         stopSelf();
     }
 }

@@ -28,9 +28,12 @@ public class CASLoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        // check if the user is logged in
+        // check if the user is currently snoozing, or even logged in
         LoggedIn log = LoggedIn.getLog();
-        if (log.getLoggedIn()) {
+        if (log.getSnoozed()){
+            Intent snoozeIntent = new Intent(CASLoginActivity.this, Snooze.class);
+            startActivity(snoozeIntent);
+        }else if (log.getLoggedIn()) {
             Intent mainIntent = new Intent(CASLoginActivity.this, MainActivity.class);
             startActivity(mainIntent);
         }

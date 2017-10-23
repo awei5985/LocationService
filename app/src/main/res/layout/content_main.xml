@@ -51,12 +51,14 @@
         android:id="@+id/logOutButton"
         android:layout_width="88dp"
         android:layout_height="48dp"
-        android:background="@android:color/background_dark"
+        android:background="@android:color/transparent"
         android:text="Log Out"
-        android:textColor="@android:color/white"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:textColor="@color/UpperRightRed"
+        android:textSize="@dimen/fab_margin"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/snoozeButton"
         app:layout_constraintVertical_bias="0.4" />
 
@@ -137,16 +139,17 @@
         android:id="@+id/snoozeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Snooze"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginTop="0dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:background="@android:color/darker_gray"
+        android:text="Snooze"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/hourEdit"
-        app:layout_constraintVertical_bias="0.2"/>
+        app:layout_constraintVertical_bias="0.2" />
 
     <!--Button
         android:id="@+id/testButton"
