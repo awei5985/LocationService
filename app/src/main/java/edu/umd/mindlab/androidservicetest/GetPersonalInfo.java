@@ -161,12 +161,7 @@ public class GetPersonalInfo extends AppCompatActivity implements TaskCompleted 
     }
 
     @Override
-    public void onBackPressed(){
-        LoggedIn log = LoggedIn.getLog();
-        log.setMain(true);
-
-        super.onBackPressed();
-    }
+    public void onBackPressed(){}
 
     @Override
     public void onTaskCompleted(String result) {

@@ -78,13 +78,13 @@ public class CASLoginActivity extends AppCompatActivity {
 
                     Log.v(TAG, "the page is finish: " + url);
 
-                    SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
-                    boolean termsAccepted = sharedPref.getBoolean(TERMS_ACCEPT, false);
-
                     // prevents the next activity from being started twice
                     LoggedIn log = LoggedIn.getLog();
                     if (log.getMain()) {
                         log.setMain(false);
+
+                        SharedPreferences sharedPref = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
+                        boolean termsAccepted = sharedPref.getBoolean(TERMS_ACCEPT, false);
 
                         if (termsAccepted) {
                             Log.v(TAG, "CASLoginActivity:CreateView:WebViewClient:OnPageFinished TermsAccepted Check, CASLogin Complete");
@@ -158,4 +158,7 @@ public class CASLoginActivity extends AppCompatActivity {
         LoggedIn log = LoggedIn.getLog();
         log.setMain(true);
     }
+
+    @Override
+    public void onBackPressed(){}
 }

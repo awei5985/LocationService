@@ -83,4 +83,7 @@ public class ConsentActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed(){}
+
 }

@@ -125,4 +125,7 @@ public class SendEmail extends AppCompatActivity {
         }); */
     }
 
+    @Override
+    public void onBackPressed(){}
+
 }

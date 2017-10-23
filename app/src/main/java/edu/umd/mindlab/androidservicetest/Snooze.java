@@ -138,4 +138,7 @@ public class Snooze extends AppCompatActivity implements TaskCompleted {
     }
 
     public void onTaskCompleted(String result){}
+
+    @Override
+    public void onBackPressed(){}
 }

@@ -307,12 +307,7 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
     }
 
     @Override
-    public void onBackPressed(){
-        LoggedIn log = LoggedIn.getLog();
-        log.setMain(true);
-
-        super.onBackPressed();
-    }
+    public void onBackPressed(){}
 
     // This method sends the collecting status to the server
     public void sendStatus(String status){
