@@ -12,12 +12,14 @@ public class LoggedIn {
     private String fullName;
     private boolean goToMain;
     private boolean snoozed;
+    private boolean isSendingLoc;
 
     private LoggedIn(){
         isLoggedIn = false;
         fullName = "No name provided";
         goToMain = true;
         snoozed = false;
+        isSendingLoc = false;
     }
 
     // returns the only instance of this class
@@ -68,5 +70,13 @@ public class LoggedIn {
     // return whether or not the app is snoozed
     public boolean getSnoozed(){
         return snoozed;
+    }
+
+    public void setSending(boolean value){
+        isSendingLoc = value;
+    }
+
+    public boolean getSending(){
+        return isSendingLoc;
     }
 }

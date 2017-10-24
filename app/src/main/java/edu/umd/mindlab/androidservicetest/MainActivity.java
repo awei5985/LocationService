@@ -15,10 +15,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +46,8 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
     };
 
     // switch button persistence variables
-    private Switch switchButton;
+    //private Switch switchButton;
+    private ToggleButton toggleLoc;
     private static final String SHARE_LOC_STATUS = "Sharing_Location_Status";
     private static final String LUID_STORE = "The_LUID_is_stored";
 
@@ -78,50 +81,60 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
         setSupportActionBar(toolbar);
 
         final Intent serviceIntent = new Intent(this, LocationService.class);
-
+        ///////started making changes//////////
         hasStarted = false;
         //started changes
-        switchButton = (Switch)findViewById(R.id.enableloc);
-        switchButton.setOnClickListener(new View.OnClickListener() {
+        //switchButton = (Switch)findViewById(R.id.enableloc);
+        toggleLoc = (ToggleButton) findViewById(R.id.enableToggle);
+
+        toggleLoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-            if(switchButton.isChecked()) {
+                if(toggleLoc.isChecked()) {
 
-                // START LOCATION SERVICE
-                startService(serviceIntent);
-                Log.i(TAG, "Switch button clicked on -> start service");
+                    // START LOCATION SERVICE
+                    startService(serviceIntent);
+                    Log.i(TAG, "Switch button clicked on -> start service");
 
-                // tell server status is 'collecting: on'
-                sendStatus("on");
+                    // tell server status is 'collecting: on'
+                    sendStatus("on");
+                    LoggedIn log = LoggedIn.getLog();
 
-                hasStarted = true;
+                    // record that the app is sending the location
+                    log.setSending(true);
 
-                SharedPreferences.Editor editor = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE).edit();
-                editor.putBoolean(SHARE_LOC_STATUS, true);
-                editor.commit();
+                    hasStarted = true;
 
-                TextView tv = (TextView) findViewById(R.id.textLocation);
-                tv.setText("Currently sharing your location");
-            } else {
+                    SharedPreferences.Editor editor = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE).edit();
+                    editor.putBoolean(SHARE_LOC_STATUS, true);
+                    editor.commit();
 
-                // STOP LOCATION SERVICE
-                // Note: Location service does not terminate unless this toggle is turned off.
-                stopService(serviceIntent);
-                Log.i(TAG, "Switch button clicked on -> stop service");
+                    TextView tv = (TextView) findViewById(R.id.textLocation);
+                    tv.setText("Currently sharing your location");
+                } else {
 
-                // tell server that status is 'collecting: off'
-                sendStatus("off");
+                    // STOP LOCATION SERVICE
+                    // Note: Location service does not terminate unless this toggle is turned off.
+                    stopService(serviceIntent);
+                    Log.i(TAG, "Switch button clicked on -> stop service");
 
-                hasStarted = false;
+                    // tell server that status is 'collecting: off'
+                    sendStatus("off");
 
-                SharedPreferences.Editor editor = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE).edit();
-                editor.putBoolean(SHARE_LOC_STATUS, false);
-                editor.commit();
+                    hasStarted = false;
+                    LoggedIn log = LoggedIn.getLog();
 
-                TextView tv = (TextView) findViewById(R.id.textLocation);
-                tv.setText("Not sharing your location");
-            }
+                    // Let the app know that it is no longer sending location
+                    log.setSending(false);
+
+                    SharedPreferences.Editor editor = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE).edit();
+                    editor.putBoolean(SHARE_LOC_STATUS, false);
+                    editor.commit();
+
+                    TextView tv = (TextView) findViewById(R.id.textLocation);
+                    tv.setText("Not sharing your location");
+                }
             }
         });
 
@@ -139,6 +152,9 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
                 log.setLoggedIn(false);
                 //starting changes
                 log.setMain(true);
+
+                // tell the app that we are no longer sending
+                log.setSending(false);
 
                 Intent logIntent = new Intent(v.getContext(), CASLoginActivity.class);
                 startActivity(logIntent);
@@ -223,8 +239,11 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
                     PERMISSIONS_LOCATION,
                     REQUEST_LOC);
 
-            switchButton = (Switch)findViewById(R.id.enableloc);
-            switchButton.setChecked(true);
+            toggleLoc = (ToggleButton) findViewById(R.id.enableToggle);
+            toggleLoc.setChecked(true);
+
+            //switchButton = (Switch)findViewById(R.id.enableloc);
+            //switchButton.setChecked(true);
 
             Log.i(TAG, "requesting permissions");
 
@@ -238,19 +257,32 @@ public class MainActivity extends AppCompatActivity implements TaskCompleted {
         Log.e(TAG, "OnResume");
 
         // persist the switchButton between sessions
-        switchButton = (Switch)findViewById(R.id.enableloc);
+        //switchButton = (Switch)findViewById(R.id.enableloc);
+
+        toggleLoc = (ToggleButton) findViewById(R.id.enableToggle);
         SharedPreferences sharedPrefs = getSharedPreferences("edu.umd.mindlab.androidservicetest", MODE_PRIVATE);
-        switchButton.setChecked(sharedPrefs.getBoolean(SHARE_LOC_STATUS, true));
+        //switchButton.setChecked(sharedPrefs.getBoolean(SHARE_LOC_STATUS, true));
+        toggleLoc.setChecked(sharedPrefs.getBoolean(SHARE_LOC_STATUS, true));
 
         TextView tv = (TextView) findViewById(R.id.textLocation);
-        if(switchButton.isChecked() && !hasStarted) {
-            final Intent serviceIntent = new Intent(this, LocationService.class);
-            // restart service
-            stopService(serviceIntent);
-            startService(serviceIntent);
+        if(toggleLoc.isChecked() && !hasStarted) {
 
-            // tell server that status is 'collecting: on'
-            sendStatus("on");
+            LoggedIn log = LoggedIn.getLog();
+            if (!log.getSending()) {
+
+                // set background of toggle to blue
+                //toggleLoc.setBackgroundColor(0xFF4f7cf6);
+
+                final Intent serviceIntent = new Intent(this, LocationService.class);
+                // restart service
+                stopService(serviceIntent);
+                startService(serviceIntent);
+
+                // tell server that status is 'collecting: on'
+                sendStatus("on");
+
+                log.setSending(true);
+            }
 
             tv.setText("Currently sharing your location");
         } else{
